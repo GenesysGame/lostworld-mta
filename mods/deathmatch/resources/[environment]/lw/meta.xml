@@ -1,0 +1,8 @@
+<meta>
+     <info author="ggame" type="gamemode" name="lw" description="Main server resource" />
+     <oop>true</oop>
+     
+     <script src="lw.lua" />
+
+     <include resource="lw_accounts" />
+</meta>

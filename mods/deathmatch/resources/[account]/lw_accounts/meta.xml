@@ -1,0 +1,6 @@
+<meta>
+     <info author="ggame" type="script" name="lw_accounts" description="Accounts management" />
+     <oop>true</oop>
+     
+     <script src="accounts.lua" />
+</meta>
