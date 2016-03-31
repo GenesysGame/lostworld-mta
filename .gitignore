@@ -39,3 +39,10 @@ luac.out
 *.x86_64
 *.hex
 
+#Server files/databases/folders
+*.db
+*.keys
+dumps/*
+
+#Log files
+*.log
