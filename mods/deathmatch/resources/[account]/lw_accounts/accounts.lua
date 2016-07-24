@@ -2,7 +2,7 @@
 
 
 --TODO: Delete ------------------------------------------------
-local spawnX, spawnY, spawnZ = 1959.55, -1714.46, 12
+local spawnX, spawnY, spawnZ = 1959.55, -1714.46, 17
 function joinHandler()
 	spawnPlayer(source, spawnX, spawnY, spawnZ)
 	fadeCamera(source, true)
