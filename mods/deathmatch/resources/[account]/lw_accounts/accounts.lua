@@ -7,7 +7,7 @@ function joinHandler()
 	spawnPlayer(source, spawnX, spawnY, spawnZ)
 	fadeCamera(source, true)
 	setCameraTarget(source, source)
-	outputChatBox("Welcome to My Server", source)
+	outputChatBox("Welcome to Lost World Role Play [Dev]", source)
 end
 addEventHandler("onPlayerJoin", getRootElement(), joinHandler)
 ---------------------------------------------------------------
