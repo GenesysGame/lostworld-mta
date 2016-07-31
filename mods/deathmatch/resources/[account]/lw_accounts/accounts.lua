@@ -11,3 +11,15 @@ function joinHandler()
 end
 addEventHandler("onPlayerJoin", getRootElement(), joinHandler)
 ---------------------------------------------------------------
+
+function loginHandler( playerSource, _, username, password )
+	local user = exports.lw_db:login(username, password)
+	if user.id ~= nil then
+		outputChatBox("Вы вошли как " .. user.name .. ".", playerSource)
+	else
+		for k,v in pairs(user) do
+			outputChatBox("Ошибка входа: " .. v)
+		end
+	end
+end
+addCommandHandler("lw_login", loginHandler)

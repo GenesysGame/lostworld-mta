@@ -1,0 +1,8 @@
+<meta>
+     <info author="ggame" type="script" name="lw_db" description="Database resource" />
+     <oop>true</oop>
+     
+     <script src="lw_db.lua" />
+
+     <export function="login" type="server" />
+</meta>

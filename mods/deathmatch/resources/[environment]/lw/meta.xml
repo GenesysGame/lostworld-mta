@@ -4,5 +4,6 @@
      
      <script src="lw.lua" />
 
+     <include resource="lw_db" />
      <include resource="lw_accounts" />
 </meta>
