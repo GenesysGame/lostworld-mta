@@ -30,6 +30,8 @@ function registerHandler( playerSource, _, username, password, email, birthday )
 	local user = exports.lw_db:register(username, password, email, birthday)
 	if user.id ~= nil then
 		outputChatBox("Вы зарегистрировались как " .. user.name .. ".", playerSource)
+	elseif type(user) == "string" then
+		outputChatBox("Ошибка регистрации: " .. user)
 	else
 		for k,v in pairs(user) do
 			outputChatBox("Ошибка регистрации: " .. v)
