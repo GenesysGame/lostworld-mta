@@ -5,4 +5,5 @@
      <script src="lw_db.lua" />
 
      <export function="login" type="server" />
+     <export function="register" type="server" />
 </meta>

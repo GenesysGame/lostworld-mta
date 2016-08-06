@@ -23,3 +23,15 @@ function loginHandler( playerSource, _, username, password )
 	end
 end
 addCommandHandler("lw_login", loginHandler)
+
+function registerHandler( playerSource, _, username, password, email, birthday )
+	local user = exports.lw_db:register(username, password, email, birthday)
+	if user.id ~= nil then
+		outputChatBox("Вы зарегистрировались как " .. user.name .. ".", playerSource)
+	else
+		for k,v in pairs(user) do
+			outputChatBox("Ошибка регистрации: " .. v)
+		end
+	end
+end
+addCommandHandler("lw_register", registerHandler)
