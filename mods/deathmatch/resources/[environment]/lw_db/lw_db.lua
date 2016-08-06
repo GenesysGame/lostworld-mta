@@ -3,12 +3,25 @@
 local db = dbConnect("mysql", "dbname=lw;host=212.109.220.208", "mta", "Y7YCQef8")
 
 function login( username, password )
-	local query = string.format("call lw.login('%s', '%s');", username, password)
+	local query = string.format("select count(id), passsalt from users where `name` like '%s';", username)
 	local result = db:query(query):poll(-1)
 	if result ~= nil and table.getn(result) > 0 then
-		return result[1]
+		local usercount = result[1]["count(id)"]
+		local passsalt = result[1]["passsalt"]
+		if usercount == 0 then
+			return "Пользователь с таким именем не найден"
+		else
+			local hashPass = md5(password .. passsalt)
+			query = string.format("select * from users where `name` like '%s' and password like '%s';", username, hashPass)
+			result = db:query(query):poll(-1)
+			if result ~= nil and table.getn(result) > 0 then
+				return result[1]
+			else
+				return "Неверный логин или пароль"
+			end
+		end
 	end
-	return false
+	return "Неизвестная ошибка входа"
 end
 
 function register( username, password, email, birthday )
