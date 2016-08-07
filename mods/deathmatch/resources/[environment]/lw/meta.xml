@@ -3,7 +3,9 @@
      <oop>true</oop>
      
      <script src="lw.lua" />
+     <script src="lw_c.lua" type="client" />
 
      <include resource="lw_db" />
      <include resource="lw_accounts" />
+     <include resource="lw_characters" />
 </meta>

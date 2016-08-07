@@ -17,7 +17,7 @@ function login( username, password )
 			if result ~= nil and table.getn(result) > 0 then
 				return result[1]
 			else
-				return "Неверный логин или пароль " .. passsalt .. " " .. hashPass
+				return "Неверный логин или пароль"
 			end
 		end
 	end
@@ -47,4 +47,54 @@ function makeSalt()
 		str = str .. all[math.random(1, #all)] 
 	end
   return str
+end
+
+function createCharacter(userId, firstname, lastname, skinId, sex, race)
+	if not userId or not firstname or not lastname or not skinId or not sex or not race then return "Не хватает входных данных" end
+	if firstname:len() == 0 or firstname:len() > 32 then
+		return "Имя персонажа должно быть непустым и не более 32 символов"
+	end
+	if lastname:len() == 0 or lastname:len() > 32 then
+		return "Фамилия персонажа должно быть непустым и не более 32 символов"
+	end
+	if sex ~= 0 and sex ~= 1 then
+		return "Неизвестный пол персонажа (0 - муж., 1 - жен.)"
+	end
+	if race < 0 or race > 2 then
+		return "Неизвестная раса персонажа (0 - европеец, 1 - чернокожий, 2 - азиат)"
+	end
+	local query = string.format("select count(id) from characters where userId = %i;", userId)
+	local result = db:query(query):poll(-1)
+	if result ~= nil and table.getn(result) > 0 then
+		local count = result[1]["count(id)"]
+		if count == 0 then
+			query = string.format("select count(id) from users where id = %i;", userId)
+			result = db:query(query):poll(-1)
+			if result ~= nil and table.getn(result) > 0 then
+				count = result[1]["count(id)"]
+				if count == 1 then
+					query = string.format([[insert into characters (userId, firstname, lastname, skinId, sex, race, createdDate)
+						values (%i, '%s', '%s', %i, %i, %i, now());]], userId, firstname, lastname, skinId, sex, race)
+					db:query(query):free()
+					query = string.format("select * from characters where userId = %i;", userId)
+					result = db:query(query):poll(-1)
+					if result ~= nil and table.getn(result) > 0 then
+						local charId = result[1]["id"]
+						query = string.format("update users set charId = %i where id = %i", charId, userId)
+						db:query(query):free()
+						return result[1]
+					else
+						return "Персонаж не создан"
+					end
+				else
+					return "Пользователь не найден"
+				end
+			else
+				return "Неизвестная ошибка создания персонажа"
+			end
+		else
+			return "Персонаж уже создан"
+		end
+	end
+	return "Неизвестная ошибка создания персонажа"
 end
