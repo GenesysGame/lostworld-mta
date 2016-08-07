@@ -2,7 +2,8 @@
 
 local startX, startY, startZ = 500, 2580, 78
 local lookAtX, lookAtY, lookAtZ = 300, 2450, 17
-function clientJoin()
+function clientJoin( resource )
+	if resource.name ~= "lw" then return end
 	-- spawnPlayer(source, spawnX, spawnY, spawnZ)
 	-- fadeCamera(source, true)
 	-- setCameraTarget(source, source)

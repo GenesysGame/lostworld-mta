@@ -15,7 +15,16 @@ function login( username, password )
 			query = string.format("select * from users where `name` like '%s' and password like '%s';", username, hashPass)
 			result = db:query(query):poll(-1)
 			if result ~= nil and table.getn(result) > 0 then
-				return result[1]
+				local  userModel = result[1]
+				local charModel = nil
+				if userModel.id ~= nil then
+					query = string.format("select * from characters where userId = %i", userModel.id)
+					result = db:query(query):poll(-1)
+					if result ~= nil and table.getn(result) > 0 then
+						charModel = result[1]
+					end
+				end
+				return userModel, charModel
 			else
 				return "Неверный логин или пароль"
 			end

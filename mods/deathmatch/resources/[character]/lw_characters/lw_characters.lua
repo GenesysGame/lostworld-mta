@@ -1,11 +1,21 @@
 -- server characters file
 
-local startX, startY, startZ = 300, 2450, 17
-
 addEvent("onCharacterLoaded", true)
 
-function specialEventHandler( charModel )
-	source:spawn(startX, startY, startZ, 0, charModel.skinId, 0, 0)
-	source.cameraTarget = source
+function spawn( pSource )
+	local charModel = pSource:getData("charModel")
+	local startX, startY, startZ = 300, 2450, 17
+	pSource:spawn(startX, startY, startZ, 0, charModel.skinId, 0, 0)
+	pSource.cameraTarget = pSource
 end
-addEventHandler("onCharacterLoaded", getRootElement(), specialEventHandler)
+
+function characterLoaded( charModel )
+	source:setData("charModel", charModel)
+	spawn(source)
+end
+addEventHandler("onCharacterLoaded", getRootElement(), characterLoaded)
+
+function playerWasted( )
+	Timer(spawn, 3000, 1, source)
+end
+addEventHandler("onPlayerWasted", getRootElement(), playerWasted)

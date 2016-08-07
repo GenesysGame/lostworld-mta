@@ -1,10 +1,14 @@
 -- Server file for accounts management
 
 function loginHandler( playerSource, _, username, password )
-	local user = exports.lw_db:login(username, password)
+	local user, char = exports.lw_db:login(username, password)
 	if user.id ~= nil then
 		outputChatBox("Вы вошли как " .. user.name .. ".", playerSource)
 		playerSource:setData("userModel", user)
+		if char ~= nil and char.id ~= nil then
+			outputChatBox("Ваш персонаж: "..char.firstname.." "..char.lastname..".")
+			triggerEvent("onCharacterLoaded", playerSource, char)
+		end
 	elseif type(user) == "string" then
 		outputChatBox("Ошибка входа: " .. user, playerSource)
 	else
@@ -16,9 +20,14 @@ end
 addCommandHandler("lw_login", loginHandler)
 
 function registerHandler( playerSource, _, username, password, email, birthday )
-	local user = exports.lw_db:register(username, password, email, birthday)
+	local user, char = exports.lw_db:register(username, password, email, birthday)
 	if user.id ~= nil then
 		outputChatBox("Вы зарегистрировались как " .. user.name .. ".", playerSource)
+		playerSource:setData("userModel", user)
+		if char ~= nil and char.id ~= nil then
+			outputChatBox("Ваш персонаж: "..char.firstname.." "..char.lastname..".")
+			triggerEvent("onCharacterLoaded", playerSource, char)
+		end
 	elseif type(user) == "string" then
 		outputChatBox("Ошибка регистрации: " .. user, playerSource)
 	else
@@ -33,12 +42,12 @@ function createCharacter( playerSource, _, firstname, lastname, sex, race )
 	sex = tonumber(sex)
 	race = tonumber(race)
 	local skinId = 0
-	if sex == 0 and race == 0 then skinId = 289
+	if sex == 0 and race == 0 then skinId = 23
 	elseif sex == 1 and race == 0 then skinId = 56
 	elseif sex == 0 and race == 1 then skinId = 22
 	elseif sex == 1 and race == 1 then skinId = 13
 	elseif sex == 0 and race == 2 then skinId = 121
-	elseif sex == 0 and race == 3 then skinId = 255
+	elseif sex == 1 and race == 2 then skinId = 169
 	end
 	local userModel = playerSource:getData("userModel")
 	if not userModel then
