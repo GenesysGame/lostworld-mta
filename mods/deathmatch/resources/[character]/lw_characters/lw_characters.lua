@@ -4,7 +4,7 @@ addEvent("onCharacterLoaded", true)
 
 function spawn( pSource )
 	local charModel = pSource:getData("charModel")
-	local startX, startY, startZ = 300, 2450, 17
+	local startX, startY, startZ = 378, 2507, 17
 	pSource:spawn(startX, startY, startZ, 0, charModel.skinId, 0, 0)
 	pSource.cameraTarget = pSource
 end
