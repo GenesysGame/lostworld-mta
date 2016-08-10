@@ -1,0 +1,9 @@
+<meta>
+    <info type="map" version="1.0.0"></info>
+    <map src="airbase.map" dimension="0"></map>
+    <settings>
+        <setting name="#useLODs" value="[ true ]"></setting>
+    </settings>
+    <script src="mapEditorScriptingExtension_s.lua" type="server"></script>
+    <script src="mapEditorScriptingExtension_c.lua" type="client" validate="false"></script>
+</meta>
