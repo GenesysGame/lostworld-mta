@@ -3,4 +3,5 @@
      <oop>true</oop>
      
      <script src="accounts.lua" />
+     <script src="accounts_c.lua" type="client" />
 </meta>

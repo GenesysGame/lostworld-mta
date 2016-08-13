@@ -1,6 +1,13 @@
 -- Server file for accounts management
 
-function loginHandler( playerSource, _, username, password )
+addEvent("server:login", true)
+
+function loginHandler( username, password )
+	login(client, _, username, password)
+end
+addEventHandler("server:login", root, loginHandler)
+
+function login( playerSource, _, username, password )
 	local user, char = exports.lw_db:login(username, password)
 	if user.id ~= nil then
 		outputChatBox("Вы вошли как " .. user.name .. ".", playerSource)
@@ -16,8 +23,9 @@ function loginHandler( playerSource, _, username, password )
 			outputChatBox("Ошибка входа: " .. v, playerSource)
 		end
 	end
+	triggerClientEvent(playerSource, "client:updateLoginUI", playerSource)
 end
-addCommandHandler("lw_login", loginHandler)
+addCommandHandler("lw_login", login)
 
 function registerHandler( playerSource, _, username, password, email, birthday )
 	local user, char = exports.lw_db:register(username, password, email, birthday)
@@ -25,7 +33,7 @@ function registerHandler( playerSource, _, username, password, email, birthday )
 		outputChatBox("Вы зарегистрировались как " .. user.name .. ".", playerSource)
 		playerSource:setData("userModel", user)
 		if char ~= nil and char.id ~= nil then
-			outputChatBox("Ваш персонаж: "..char.firstname.." "..char.lastname..".")
+			outputChatBox("Ваш персонаж: "..char.firstname.." "..char.lastname..".", playerSource)
 			triggerEvent("onCharacterLoaded", playerSource, char)
 		end
 	elseif type(user) == "string" then
@@ -35,6 +43,7 @@ function registerHandler( playerSource, _, username, password, email, birthday )
 			outputChatBox("Ошибка регистрации: " .. v, playerSource)
 		end
 	end
+	triggerClientEvent(playerSource, "client:updateLoginUI", playerSource)
 end
 addCommandHandler("lw_register", registerHandler)
 
@@ -66,5 +75,6 @@ function createCharacter( playerSource, _, firstname, lastname, sex, race )
 			outputChatBox("Ошибка создания персонажа: " .. v, playerSource)
 		end
 	end
+	triggerClientEvent(playerSource, "client:updateLoginUI", playerSource)
 end
 addCommandHandler("lw_createchar", createCharacter)
