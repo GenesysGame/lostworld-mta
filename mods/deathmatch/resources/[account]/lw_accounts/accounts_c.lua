@@ -22,6 +22,10 @@ end
 addEventHandler("client:updateLoginUI", getRootElement(), updateLoginUI)
 
 function showLoginWindow()
+	Camera.fade(true, 5)
+	local startX, startY, startZ = 500, 2580, 78
+	local lookAtX, lookAtY, lookAtZ = 300, 2450, 17
+	Camera.setMatrix(startX, startY, startZ, lookAtX, lookAtY, lookAtZ)
 	showWindow(loginWindow.wdw)
 	setPlayerHudComponentVisible("all", false)
 	-- активируем курсор игрока (чтобы он мог выбирать компонентф и кликать по ним)
