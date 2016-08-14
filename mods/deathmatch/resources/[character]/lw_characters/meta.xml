@@ -2,5 +2,6 @@
      <info author="ggame" type="script" name="lw_characters" description="Characters scripts" />
      <oop>true</oop>
      
-     <script src="lw_characters.lua" />
+     <script src="characters.lua" />
+     <script src="characters_c.lua" type="client" />
 </meta>

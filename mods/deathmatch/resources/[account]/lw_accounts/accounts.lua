@@ -91,8 +91,8 @@ end
 addCommandHandler("lw_createchar", createCharacter)
 
 function logout( playerSource, _, firstname, lastname, sex, race )
+	triggerEvent("onCharacterLoaded", playerSource, nil)
 	playerSource:setData("userModel", nil)
-	playerSource:setData("charModel", nil)
 	triggerClientEvent(playerSource, "client:updateLoginUI", playerSource)
 end
 addCommandHandler("lw_logout", logout)

@@ -11,7 +11,10 @@ end
 
 function characterLoaded( charModel )
 	source:setData("charModel", charModel)
-	spawn(source)
+	if charModel ~= nil then
+		spawn(source)
+	end
+	triggerClientEvent(source, "client:onCharacterUpdated", source)
 end
 addEventHandler("onCharacterLoaded", getRootElement(), characterLoaded)
 
