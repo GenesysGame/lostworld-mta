@@ -43,6 +43,7 @@ luac.out
 *.db
 *.keys
 dumps/*
+mods/deathmatch/resource-cache/*
 
 #Log files
 *.log
