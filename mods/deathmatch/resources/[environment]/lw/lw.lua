@@ -1,7 +1,7 @@
 -- Main server file
 
 function playerJoin()
-	outputChatBox("Welcome to Lost World Role Play [Dev]!")
+	outputChatBox("Welcome to Lost World Role Play [Dev]!", source)
 	triggerClientEvent(source, "client:updateLoginUI", source)
 end
 addEventHandler("onPlayerJoin", getRootElement(), playerJoin)
