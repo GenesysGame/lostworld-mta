@@ -32,7 +32,7 @@ function updateStatesWindow( )
 		statesWindow.lblLastname.text = character.lastname
 		statesWindow.lblSex.text = character.sex == 0 and "Male" or "Female"
 		statesWindow.lblRace.text = character.race == 0 and "European" or character.race == 1 and "Black" or "Asian"
-		statesWindow.lblAge.text = tostring(character.gametime).." years"
+		statesWindow.lblAge.text = tostring(character.age).." years"
 		statesWindow.lblExp.text = tostring(character.experience).." points"
 	end
 end
