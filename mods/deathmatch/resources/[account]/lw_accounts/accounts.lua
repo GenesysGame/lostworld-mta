@@ -2,6 +2,7 @@
 
 addEvent("server:login", true)
 addEvent("server:register", true)
+addEvent("server:createChar", true)
 
 function loginHandler( username, password )
 	login(client, _, username, password)
@@ -12,6 +13,11 @@ function registerHandler( username, password )
 	register(client, _, username, password)
 end
 addEventHandler("server:register", root, registerHandler)
+
+function createCharHandler( firstname, lastname, sex, race )
+	createCharacter(client, _, firstname, lastname, sex, race)
+end
+addEventHandler("server:createChar", root, createCharHandler)
 
 function login( playerSource, _, username, password )
 	local user, char = exports.lw_db:login(username, password)
@@ -69,7 +75,6 @@ function createCharacter( playerSource, _, firstname, lastname, sex, race )
 		outputChatBox("Войдите, прежде чем создать персонажа", playerSource)
 		return
 	end
-	outputDebugString(userModel.id.." "..firstname.." "..lastname.." "..skinId.. " "..sex.. " "..race)
 	local char = exports.lw_db:createCharacter(tonumber(userModel.id), firstname, lastname, skinId, sex, race)
 	if char.id ~= nil then
 		outputChatBox("Вы создали персонажа "..char.firstname.." "..char.lastname..".", playerSource)

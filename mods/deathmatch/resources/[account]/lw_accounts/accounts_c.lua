@@ -62,7 +62,7 @@ function createLoginWindow()
 	guiCreateLabel(x, y, width, height, "Password:", false, aTable.wdw)
 
 	y = 60
-	height = 30
+	height = 25
 	aTable.edtUser = guiCreateEdit(x, y, width, height, "", false, aTable.wdw)
 	y = 120
 	aTable.edtPass = guiCreateEdit(x, y, width, height, "", false, aTable.wdw)
@@ -108,7 +108,7 @@ function createRegisterWindow()
 	guiCreateLabel(x, y, width, height, "Repeat password:", false, aTable.wdw)
 
 	y = 60
-	height = 30
+	height = 25
 	aTable.edtUser = guiCreateEdit(x, y, width, height, "", false, aTable.wdw)
 	y = 120
 	aTable.edtPass = guiCreateEdit(x, y, width, height, "", false, aTable.wdw)
@@ -138,11 +138,57 @@ end
 
 function createCreateCharWindow()
 	local x = 0.5 * scrW - 150
-	local y = 0.5 * scrH - 100
+	local y = 0.5 * scrH - 135
 	local width = 300
-	local height = 200
+	local height = 320
 	local aTable = {}
 	aTable.wdw = guiCreateWindow(x, y, width, height, "Create Character Window v0.01", false)
+
+	x = 20
+	y = 40
+	width = 260
+	height = 20
+	guiCreateLabel(x, y, width, height, "Fristname:", false, aTable.wdw)
+
+	y = 100
+	guiCreateLabel(x, y, width, height, "Lastname:", false, aTable.wdw)
+
+	y = 160
+	guiCreateLabel(x, y, width, height, "Race:", false, aTable.wdw)
+
+	y = 220
+	guiCreateLabel(x, y, width, height, "Sex:", false, aTable.wdw)
+
+	y = 60
+	height = 25
+	aTable.edtFirstname = guiCreateEdit(x, y, width, height, "", false, aTable.wdw)
+	y = 120
+	aTable.edtLastname = guiCreateEdit(x, y, width, height, "", false, aTable.wdw)
+
+	guiEditSetMaxLength(aTable.edtFirstname, 32)
+	guiEditSetMaxLength(aTable.edtLastname, 32)
+
+	y = 180
+	height = 80
+	aTable.raceBox = guiCreateComboBox(x, y, width, height, "", false, aTable.wdw)
+	guiComboBoxAddItem(aTable.raceBox, "European")
+	guiComboBoxAddItem(aTable.raceBox, "Black")
+	guiComboBoxAddItem(aTable.raceBox, "Asian")
+	guiComboBoxSetSelected(aTable.raceBox, 0)
+
+	y = 240
+	height = 70
+	aTable.sexBox = guiCreateComboBox(x, y, width, height, "", false, aTable.wdw)
+	guiComboBoxAddItem(aTable.sexBox, "Male")
+	guiComboBoxAddItem(aTable.sexBox, "Female")
+	guiComboBoxSetSelected(aTable.sexBox, 0)
+ 
+	x = 90
+	y = 280
+	width = 120
+	height = 30
+	aTable.btnCreate = guiCreateButton(x, y, width, height, "Create", false, aTable.wdw)
+	addEventHandler("onClientGUIClick", aTable.btnCreate, clientButtonClick, false)
 
 	guiSetVisible(aTable.wdw, false)
 	return aTable
@@ -177,12 +223,21 @@ function clientButtonClick(button,state)
 			local pass = registerWindow.edtPass.text
 			local repeatPass = registerWindow.edtRepeatPass.text
 			if username and pass and repeatPass then
-				outputDebugString("Start register "..username.." "..tostring(pass == repeatPass))
 				if pass == repeatPass then
 					triggerServerEvent("server:register", getRootElement(), username, pass)
 				else
 					outputChatBox("Введенные пароли не совпадают.")
 				end
+			end
+		elseif source == createCharWindow.btnCreate then -- create char button on create char window
+			local firstname = createCharWindow.edtFirstname.text
+			local lastname = createCharWindow.edtLastname.text
+			local sex = createCharWindow.sexBox.selected
+			local race = createCharWindow.raceBox.selected
+			if string.len(firstname) > 0 and string.len(lastname) > 0 then
+				triggerServerEvent("server:createChar", getRootElement(), firstname, lastname, sex, race)
+			else
+				outputChatBox("Имя и фамилия не должны быть пустыми.")
 			end
 		end
 	end
