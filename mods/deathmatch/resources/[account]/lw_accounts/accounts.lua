@@ -1,11 +1,17 @@
 -- Server file for accounts management
 
 addEvent("server:login", true)
+addEvent("server:register", true)
 
 function loginHandler( username, password )
 	login(client, _, username, password)
 end
 addEventHandler("server:login", root, loginHandler)
+
+function registerHandler( username, password )
+	register(client, _, username, password)
+end
+addEventHandler("server:register", root, registerHandler)
 
 function login( playerSource, _, username, password )
 	local user, char = exports.lw_db:login(username, password)
@@ -27,7 +33,7 @@ function login( playerSource, _, username, password )
 end
 addCommandHandler("lw_login", login)
 
-function registerHandler( playerSource, _, username, password, email, birthday )
+function register( playerSource, _, username, password, email, birthday )
 	local user, char = exports.lw_db:register(username, password, email, birthday)
 	if user.id ~= nil then
 		outputChatBox("Вы зарегистрировались как " .. user.name .. ".", playerSource)
@@ -45,7 +51,7 @@ function registerHandler( playerSource, _, username, password, email, birthday )
 	end
 	triggerClientEvent(playerSource, "client:updateLoginUI", playerSource)
 end
-addCommandHandler("lw_register", registerHandler)
+addCommandHandler("lw_register", register)
 
 function createCharacter( playerSource, _, firstname, lastname, sex, race )
 	sex = tonumber(sex)

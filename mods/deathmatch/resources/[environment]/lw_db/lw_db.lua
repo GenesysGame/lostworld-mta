@@ -9,7 +9,7 @@ function login( username, password )
 		local usercount = result[1]["count(id)"]
 		local passsalt = result[1]["passsalt"]
 		if usercount == 0 then
-			return "Пользователь с таким именем не найден"
+			return "Пользователь с таким именем не найден."
 		else
 			local hashPass = md5(password .. passsalt)
 			query = string.format("select * from users where `name` like '%s' and password like '%s';", username, hashPass)
@@ -26,24 +26,32 @@ function login( username, password )
 				end
 				return userModel, charModel
 			else
-				return "Неверный логин или пароль"
+				return "Неверный логин или пароль."
 			end
 		end
 	end
-	return "Неизвестная ошибка входа"
+	return "Неизвестная ошибка входа."
 end
 
 function register( username, password, email, birthday )
 	if not username or username:len() < 4 or username:len() > 32 then
-		return "Имя пользователя должно быть не менее 4 и не более 32 символов"
+		return "Имя пользователя должно быть не менее 4 и не более 32 символов."
 	end
 	if not password or password:len() < 6 or password:len() > 32 then
-		return "Пароль должен быть не менее 6 и не более 32 символов"
+		return "Пароль должен быть не менее 6 и не более 32 символов."
+	end
+	local query = string.format("select count(id) from users where `name` like '%s';", username)
+	local result = db:query(query):poll(-1)
+	if result ~= nil and table.getn(result) > 0 then
+		local usercount = result[1]["count(id)"]
+		if usercount == 1 then
+			return "Пользователь с таким именем уже существует."
+		end
 	end
 	local salt = makeSalt()
 	local hashPass = md5(password .. salt)
 	local dateFormat = "%e.%c.%Y"
-	local query = string.format([[insert into users (`name`, email, birthDate, password, passsalt, isActivated, createdDate)
+	query = string.format([[insert into users (`name`, email, birthDate, password, passsalt, isActivated, createdDate)
 		values ('%s', '%s', str_to_date('%s', '%s'), '%s', '%s', 1, now());]], username, email or '', birthday or '', dateFormat, hashPass, salt)
 	db:query(query):free()
 	return login(username, password)
