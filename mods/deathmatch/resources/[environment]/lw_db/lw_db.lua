@@ -2,6 +2,9 @@
 
 local db = dbConnect("mysql", "dbname=lw;host=212.109.220.208", "mta", "Y7YCQef8")
 
+local loginPattern = '[a-zA-Z0-9_%-]+'
+local namePattern = '[АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдеёжзийклмнопрстуфхцчшщъыьэюя]+'
+
 function login( username, password )
 	local query = string.format("select count(id), passsalt from users where `name` like '%s';", username)
 	local result = db:query(query):poll(-1)
@@ -34,6 +37,12 @@ function login( username, password )
 end
 
 function register( username, password, email, birthday )
+	if username:match(loginPattern) ~= username then
+		return "Имя пользователя может состоять только из букв латинского алфавита, цифр и символов - и _ ."
+	end 
+	if password:match(loginPattern) ~= password then
+		return "Пароль может состоять только из букв латинского алфавита, цифр и символов - и _ ."
+	end
 	if not username or username:len() < 4 or username:len() > 32 then
 		return "Имя пользователя должно быть не менее 4 и не более 32 символов."
 	end
@@ -68,6 +77,12 @@ end
 
 function createCharacter(userId, firstname, lastname, skinId, sex, race)
 	if not userId or not firstname or not lastname or not skinId or not sex or not race then return "Не хватает входных данных" end
+	if  firstname:match(namePattern) ~= firstname then
+		return "Имя персонажа должно состоять только из букв русского алфавита и начинаться с большой буквы"
+	end
+	if lastname:match(namePattern) ~= lastname then
+		return "Фамилия персонажа должно состоять только из букв русского алфавита и начинаться с большой буквы"
+	end
 	if firstname:len() == 0 or firstname:len() > 32 then
 		return "Имя персонажа должно быть непустым и не более 32 символов"
 	end
