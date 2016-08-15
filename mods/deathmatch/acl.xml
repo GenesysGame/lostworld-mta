@@ -23,6 +23,7 @@
         <object name="resource.admin"></object>
         <object name="resource.webadmin"></object>
         <object name="user.ggame"></object>
+        <object name="user.bruno"></object>
     </group>
     <group name="Console">
         <acl name="Moderator"></acl>
