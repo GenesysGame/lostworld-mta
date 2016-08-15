@@ -1,0 +1,13 @@
+<meta>
+     <info author="ggame" type="script" name="lw_models" description="Models replacing" />
+     <oop>true</oop>
+     
+     <script src="models_c.lua" type="client" />
+
+    <file src="data/cheetah.txd" />
+    <file src="data/cheetah.dff" />
+    <file src="data/alpha.txd" />
+    <file src="data/alpha.dff" />
+    <file src="data/turismo.txd" />
+    <file src="data/turismo.dff" />
+</meta>
