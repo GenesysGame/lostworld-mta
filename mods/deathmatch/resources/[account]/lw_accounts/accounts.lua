@@ -25,7 +25,7 @@ function login( playerSource, _, username, password )
 		outputChatBox("Вы вошли как " .. user.name .. ".", playerSource)
 		playerSource:setData("userModel", user)
 		if char ~= nil and char.id ~= nil then
-			outputChatBox("Ваш персонаж: "..char.firstname.." "..char.lastname..".")
+			outputChatBox("Ваш персонаж: "..char.firstname.." "..char.lastname..".", playerSource)
 			triggerEvent("onCharacterLoaded", playerSource, char)
 		end
 	elseif type(user) == "string" then
