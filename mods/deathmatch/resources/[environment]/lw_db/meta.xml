@@ -7,4 +7,5 @@
      <export function="login" type="server" />
      <export function="register" type="server" />
      <export function="createCharacter" type="server" />
+     <export function="getObjects" type="server" />
 </meta>

@@ -130,3 +130,13 @@ function createCharacter(userId, firstname, lastname, skinId, sex, race)
 	end
 	return "Неизвестная ошибка создания персонажа"
 end
+
+function getObjects( )
+	local query = "select * from objects;"
+	local result = db:query(query):poll(-1)
+	if result ~= nil and table.getn(result) > 0 then
+		return result
+	else
+		return "Ошибка получения игровых объектов"
+	end
+end
