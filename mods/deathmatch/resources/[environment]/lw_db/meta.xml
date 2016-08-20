@@ -8,4 +8,5 @@
      <export function="register" type="server" />
      <export function="createCharacter" type="server" />
      <export function="getObjects" type="server" />
+     <export function="updateCharacter" type ="server" />
 </meta>

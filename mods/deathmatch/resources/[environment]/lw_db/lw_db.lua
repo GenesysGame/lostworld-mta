@@ -5,6 +5,8 @@ local db = dbConnect("mysql", "dbname=lw;host=212.109.220.208", "mta", "Y7YCQef8
 local loginPattern = '[a-zA-Z0-9_%-]+'
 local namePattern = '[АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдеёжзийклмнопрстуфхцчшщъыьэюя]+'
 
+-- Accounts, Characters
+
 function login( username, password )
 	local query = string.format("select count(id), passsalt from users where `name` like '%s';", username)
 	local result = db:query(query):poll(-1)
@@ -112,7 +114,7 @@ function createCharacter(userId, firstname, lastname, skinId, sex, race)
 					result = db:query(query):poll(-1)
 					if result ~= nil and table.getn(result) > 0 then
 						local charId = result[1]["id"]
-						query = string.format("update users set charId = %i where id = %i", charId, userId)
+						query = string.format("update users set charId = %i where id = %i;", charId, userId)
 						db:query(query):free()
 						return result[1]
 					else
@@ -130,6 +132,13 @@ function createCharacter(userId, firstname, lastname, skinId, sex, race)
 	end
 	return "Неизвестная ошибка создания персонажа"
 end
+
+function updateCharacter( charModel )
+	local query = string.format("update characters set gametime = %i, experience = %i where id = %i;", charModel.gametime, charModel.experience, charModel.id)
+	db:query(query):free()
+end
+
+-- Objects
 
 function getObjects( )
 	local query = "select * from objects;"
