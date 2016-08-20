@@ -24,6 +24,7 @@
         <object name="resource.webadmin"></object>
         <object name="user.ggame"></object>
         <object name="user.bruno"></object>
+        <object name="user.3ff"></object>
     </group>
     <group name="Console">
         <acl name="Moderator"></acl>
@@ -48,6 +49,10 @@
     </group>
     <group name="DevGroup">
         <acl name="DevACL"></acl>
+    </group>
+    <group name="autoGroup_guieditor">
+        <acl name="autoACL_guieditor"></acl>
+        <object name="resource.guieditor"></object>
     </group>
     <acl name="Default">
         <right name="general.ModifyOtherObjects" access="false"></right>
@@ -758,5 +763,9 @@
         <right name="command.banserial" access="false"></right>
         <right name="command.unbanserial" access="false"></right>
         <right name="command.listbans" access="false"></right>
+    </acl>
+    <acl name="autoACL_guieditor">
+        <right name="general.ModifyOtherObjects" access="false" who="" pending="true" date=""></right>
+        <right name="function.callRemote" access="false" who="" pending="true" date=""></right>
     </acl>
 </acl>
