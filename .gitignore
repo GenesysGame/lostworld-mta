@@ -41,6 +41,7 @@ luac.out
 
 #Server files/databases/folders
 *.db
+*.csv
 *.keys
 dumps/*
 mods/deathmatch/resource-cache/*

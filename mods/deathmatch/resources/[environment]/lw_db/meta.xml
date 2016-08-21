@@ -9,4 +9,7 @@
      <export function="createCharacter" type="server" />
      <export function="getObjects" type="server" />
      <export function="updateCharacter" type ="server" />
+     <export function="addObjects" type="server" />
+     <export function="delObjects" type="server" />
+     <export function="getCharObjects" type="server" />
 </meta>

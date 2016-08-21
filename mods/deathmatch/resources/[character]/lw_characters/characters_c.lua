@@ -34,6 +34,8 @@ function updateStatesWindow( )
 		statesWindow.lblRace.text = character.race == 0 and "European" or character.race == 1 and "Black" or "Asian"
 		statesWindow.lblAge.text = tostring(character.age).." years"
 		statesWindow.lblExp.text = tostring(character.experience).." points"
+		statesWindow.lblvol.text = tostring(character.inventoryVolume).." volume"
+		statesWindow.lblwei.text = tostring(character.inventoryWeight).." weight"
 	end
 end
 addEventHandler("client:onCharacterUpdated", localPlayer, updateStatesWindow)
@@ -43,7 +45,7 @@ function createStatesWindow( )
 	local rX = 170
 	local y = 0.5 * scrH - 105
 	local width = 300
-	local height = 210
+	local height = 300
 	local aTable = {}
 	aTable.wdw = guiCreateWindow(x, y, width, height, "States Window v0.01", false)
 
@@ -73,6 +75,14 @@ function createStatesWindow( )
 	y = 180
 	guiCreateLabel(x, y, width, height, "Experience:", false, aTable.wdw)
 	aTable.lblExp = guiCreateLabel(rX, y, width, height, "", false, aTable.wdw) 
+
+	y = 210
+	guiCreateLabel(x, y, width, height, "Volume:", false, aTable.wdw)
+	aTable.lblvol = guiCreateLabel(rX, y, width, height, "", false, aTable.wdw) 
+
+	y = 240
+	guiCreateLabel(x, y, width, height, "Weight:", false, aTable.wdw)
+	aTable.lblwei = guiCreateLabel(rX, y, width, height, "", false, aTable.wdw) 
 
 	-- делаем окно невидимым
 	guiSetVisible(aTable.wdw, false)
