@@ -9,7 +9,7 @@ addEventHandler("onPlayerJoin", getRootElement(), playerJoin)
 function quitPlayer( quitType )
 	-- send the message to the server telling players that the player has left.
 	outputChatBox( source.name.. " has left the server (" .. quitType .. ")" )
-	triggerEvent("onCharacterUnloaded", playerSource, quitType)
+	triggerEvent("onCharacterUnloaded", source, quitType)
 end
 addEventHandler("onPlayerQuit", getRootElement(), quitPlayer)
 
