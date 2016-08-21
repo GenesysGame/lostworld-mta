@@ -39,16 +39,12 @@ luac.out
 *.x86_64
 *.hex
 
-#Server files/databases/folders
+# Server files/databases/folders
 *.db
 *.csv
 *.keys
 dumps/*
 mods/deathmatch/resource-cache/*
 
-#Log files
+# Log files
 *.log
-
-#Context
-mods/deathmatch/resources/[dev]/admin/conf/IpToCountryCompact.csv
-mods/deathmatch/settings.xml

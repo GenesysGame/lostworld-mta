@@ -8,6 +8,9 @@ local gametimeTimers = {} -- Timer objects for gametime updating
 local playerStartTimes = {} -- gametime value for every player when character loaded
 local startGametimes = {} -- start tick count values for every player
 
+-- dimensions
+local unloggedDimension = 65535
+
 function updateCharacterAge( pSource )
 	local charModel = pSource:getData("charModel")
 	if not charModel then return end
@@ -39,8 +42,7 @@ end
 
 function spawn( pSource )
 	local charModel = pSource:getData("charModel")
-	local startX, startY, startZ = 378, 2507, 17
-	pSource:spawn(startX, startY, startZ, 0, charModel.skinId, 0, 0)
+	pSource:spawn(charModel.startPosX, charModel.startPosY, charModel.startPosZ, charModel.startPosRotation, charModel.skinId, charModel.startPosInterior, charModel.startPosDimension)
 	pSource.cameraTarget = pSource
 end
 
@@ -57,6 +59,16 @@ addEventHandler("onCharacterLoaded", getRootElement(), characterLoaded)
 function characterUnloaded( quitType )
 	updateCharacterGametime(source)
 	local charModel = source:getData("charModel")
+	local pos = source.position
+	charModel.startPosX = pos.x
+	charModel.startPosY = pos.y
+	charModel.startPosZ = pos.z
+	charModel.startPosRotation = source.rotation.z
+	charModel.startPosInterior = source.interior
+	charModel.startPosDimension = source.dimension
+	source.dimension = unloggedDimension
+	source.vehicle = nil
+	source.frozen = true
 	if charModel ~= nil then
 		gametimeTimers[charModel.id]:destroy()
 		gametimeTimers[charModel.id] = nil

@@ -134,7 +134,8 @@ function createCharacter(userId, firstname, lastname, skinId, sex, race)
 end
 
 function updateCharacter( charModel )
-	local query = string.format("update characters set gametime = %i, experience = %i where id = %i;", charModel.gametime, charModel.experience, charModel.id)
+	local query = string.format("update characters set gametime = %i, experience = %i, startPosX = %.3f, startPosY = %.3f, startPosZ = %.3f, startPosRotation = %.3f, startPosDimension = %i, startPosInterior = %i where id = %i;", 
+		charModel.gametime, charModel.experience, charModel.startPosX, charModel.startPosY, charModel.startPosZ, charModel.startPosRotation, charModel.startPosDimension, charModel.startPosInterior, charModel.id)
 	db:query(query):free()
 end
 
