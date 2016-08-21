@@ -48,3 +48,7 @@ mods/deathmatch/resource-cache/*
 
 #Log files
 *.log
+
+#Context
+mods/deathmatch/resources/[dev]/admin/conf/IpToCountryCompact.csv
+mods/deathmatch/settings.xml
