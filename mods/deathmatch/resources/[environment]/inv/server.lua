@@ -1,49 +1,53 @@
-function load ( playerSource, commandName )
-    objects = exports.lw_db:getObjects()
-		for i, object in ipairs(objects) do
-			outputDebugString("OBJECT: "..i)
-			local string = ""
-			for key, field in pairs(object) do
-				string = string.."| "..key..": "..tostring(field).." "
-			end
-			outputDebugString(string)
-		end
-    triggerClientEvent ( playerSource, "onLoad", playerSource, objects)
+local allObjects = {}
+
+function showInventory (localPlayer)
+	triggerClientEvent (localPlayer, "onLoad", localPlayer, allObjects)
 end
-addCommandHandler ( "load", load )
+addEvent("onShowInventory", true)
+addEventHandler("onShowInventory", resourceRoot, showInventory)
 
-
-function addobj ( playerSource, commandName, volume, charid, posy, weight, posz, posx, name)
-    local character = playerSource:getData("charModel")
+function addObject (playerSource, commandName, volume, weight, name, charId)
 	volume = tonumber(volume)
-	charid = tonumber(charid)
-	posy = tonumber(posy)
+	if(charid) then charid = tonumber(charid) end
 	weight = tonumber(weight)
-	posz = tonumber(posz)
-	posx = tonumber(posx)
 	name = tostring(name)
-	table = exports.lw_db:getCharObjects(charid)
-	totalvol = 0
-	totalwei = 0
-	for i, object in ipairs(table) do
-			totalvol = totalvol + object["volume"]
-			totalwei = totalwei + object["weight"]
-	end
-	outputDebugString("Vol: "..totalvol)
-	outputDebugString("Wei: "..totalwei)
-	outputDebugString("Vol2: "..character.inventoryVolume)
-	outputDebugString("Wei2: "..character.inventoryWeight)
-	if(character.inventoryVolume < totalvol + volume or character.inventoryWeight < totalwei + weight) then
-		outputDebugString("Низзя!")
+	if(charId) then
+		exports.lw_db:addObjects(volume, weight, name, charId)
+		table.insert(allObjects, { id = allObjects[table.maxn(allObjects)]["id"]+1, volume = volume, weight = weight, name = name, charId = charId})
 	else
-    	exports.lw_db:addObjects( volume, charid, posy, weight, posz, posx, name )
+		local character = playerSource:getData("charModel")
+		local totalvol = 0
+		local totalwei = 0
+		for i, object in ipairs(allObjects) do
+			if(object["charId"]) == character.id then
+				totalvol = totalvol + object["volume"]
+				totalwei = totalwei + object["weight"]
+			end
+		end
+		outputDebugString("Vol: "..totalvol)
+		outputDebugString("Wei: "..totalwei)
+		if(character.inventoryVolume < totalvol + volume or character.inventoryWeight < totalwei + weight) then
+			outputDebugString("Невозможно добавить предмет данному игроку. Вес или объём исчерпан!")
+		else
+			exports.lw_db:addObjects(volume, weight, name, character.id)
+			table.insert(allObjects, { id = allObjects[table.maxn(allObjects)]["id"]+1, volume = volume, weight = weight, name = name, charId = character.id})
+		end
 	end
 end
-addCommandHandler ( "addobj", addobj )
+addCommandHandler ("addObj", addObject)
 
-function delobj ( playerSource, commandName, id)
+function delObject (playerSource, commandName, id)
     id = tonumber(id)
-    local character = playerSource:getData("charModel")
-    exports.lw_db:delObjects( id )
+    exports.lw_db:delObjects(id)
+	for i, object in ipairs(allObjects) do
+		if(object["id"]) == id then
+			table.remove(allObjects, i)
+		end
+	end
 end
-addCommandHandler ( "delobj", delobj )
+addCommandHandler ("delObj", delObject)
+
+function resourceStart ()
+	allObjects = exports.lw_db:getObjects()
+end
+addEventHandler ("onResourceStart", getRootElement(), resourceStart)

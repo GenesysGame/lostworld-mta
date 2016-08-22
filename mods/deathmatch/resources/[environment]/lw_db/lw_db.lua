@@ -151,23 +151,13 @@ function getObjects( )
 	end
 end
 
-function addObjects( volume, charid, posy, weight, posz, posx, name )
-	query = string.format([[insert into objects (volume, charId, posY, weight, posZ, posX, name)
-		values ('%d', '%d', '%d' , '%d', '%d', '%d', '%s');]], volume, charid, posy, weight, posz, posx, name)
+function addObjects( volume, weight, name, charId )
+	query = string.format([[insert into objects (volume, weight, name, charId)
+	values ('%d', '%d', '%s' , '%d');]], volume, weight, name, charId)
 	db:query(query):free()
 end
 
 function delObjects( id )
-	query = string.format("DELETE FROM objects WHERE id = %i;", id)
+	query = string.format("delete from objects WHERE id = %i;", id)
 	result = db:query(query):poll(-1)
-end
-
-function getCharObjects(charid)
-	local query = string.format("select * from objects where charId = %i", charid)
-	local result = db:query(query):poll(-1)
-	if result ~= nil and table.getn(result) > 0 then
-		return result
-	else
-		return "Ошибка"
-	end
 end
