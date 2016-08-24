@@ -9,7 +9,7 @@ addEventHandler("onClientResourceStart", resourceRoot, requestLODsClient)
 
 function setLODsClient(lodTbl)
 	for i, model in ipairs(lodTbl) do
-		engineSetModelLODDistance(model, 1200)
+		engineSetModelLODDistance(model, 300)
 	end
 end
 addEvent("setLODsClient", true)
