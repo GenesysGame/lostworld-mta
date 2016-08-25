@@ -4,6 +4,8 @@ addEvent("server:login", true)
 addEvent("server:register", true)
 addEvent("server:createChar", true)
 
+local onlineUserIds = {}
+
 function loginHandler( username, password )
 	login(client, _, username, password)
 end
@@ -22,11 +24,23 @@ addEventHandler("server:createChar", root, createCharHandler)
 function login( playerSource, _, username, password )
 	local user, char = exports.lw_db:login(username, password)
 	if user.id ~= nil then
-		outputChatBox("Вы вошли как " .. user.name .. ".", playerSource)
-		playerSource:setData("userModel", user)
-		if char ~= nil and char.id ~= nil then
-			outputChatBox("Ваш персонаж: "..char.firstname.." "..char.lastname..".", playerSource)
-			triggerEvent("onCharacterLoaded", playerSource, char)
+		local isDuplicateLogIn = false
+		for index, id in ipairs(onlineUserIds) do
+			if id == user.id then
+				isDuplicateLogIn = true
+				break
+			end
+		end
+		if isDuplicateLogIn then
+			outputChatBox("Ошибка: Пользователь с таким именем уже в сети.", playerSource)
+		else
+			table.insert(onlineUserIds, user.id)
+			outputChatBox("Вы вошли как " .. user.name .. ".", playerSource)
+			playerSource:setData("userModel", user)
+			if char ~= nil and char.id ~= nil then
+				outputChatBox("Ваш персонаж: "..char.firstname.." "..char.lastname..".", playerSource)
+				triggerEvent("onCharacterLoaded", playerSource, char)
+			end
 		end
 	elseif type(user) == "string" then
 		outputChatBox("Ошибка входа: " .. user, playerSource)
@@ -92,7 +106,29 @@ addCommandHandler("lw_createchar", createCharacter)
 
 function logout( playerSource )
 	triggerEvent("onCharacterUnloaded", playerSource, "logout")
-	playerSource:setData("userModel", nil)
+	local userModel = playerSource:getData("userModel")
+	if userModel then
+		toggleOfflineUser(userModel)
+		playerSource:setData("userModel", nil)
+	end
 	triggerClientEvent(playerSource, "client:updateLoginUI", playerSource)
 end
 addCommandHandler("lw_logout", logout)
+
+function quitPlayer( quitType )
+	local userModel = source:getData("userModel")
+	if userModel then
+		toggleOfflineUser(userModel)
+	end
+end
+addEventHandler("onPlayerQuit", getRootElement(), quitPlayer)
+
+
+function toggleOfflineUser( userModel )
+	for index, id in ipairs(onlineUserIds) do
+		if id == userModel.id then
+			table.remove(onlineUserIds, index)
+			break
+		end
+	end
+end
