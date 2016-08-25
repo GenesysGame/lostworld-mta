@@ -161,3 +161,12 @@ function delObjects( id )
 	query = string.format("delete from objects WHERE id = %i;", id)
 	result = db:query(query):poll(-1)
 end
+
+-- Delete after ...
+
+function eff() 
+	local query = string.format("ALTER TABLE objects AUTO_INCREMENT = 1;")
+	db:query(query):free()
+	outputDebugString("allgood")
+end
+addCommandHandler("eff",eff)

@@ -1,4 +1,4 @@
-local allObjects = {}
+allObjects = {}
 
 function showInventory (localPlayer)
 	triggerClientEvent (localPlayer, "onLoad", localPlayer, allObjects)
@@ -8,7 +8,7 @@ addEventHandler("onShowInventory", resourceRoot, showInventory)
 
 function addObject (playerSource, commandName, volume, weight, name, charId)
 	volume = tonumber(volume)
-	if(charid) then charid = tonumber(charid) end
+	if(charId) then charId = tonumber(charId) end
 	weight = tonumber(weight)
 	name = tostring(name)
 	if(charId) then
@@ -17,24 +17,34 @@ function addObject (playerSource, commandName, volume, weight, name, charId)
 	else
 		local character = playerSource:getData("charModel")
 		local totalvol = 0
-		local totalwei = 0
+		local totalwei = 0 
 		for i, object in ipairs(allObjects) do
 			if(object["charId"]) == character.id then
 				totalvol = totalvol + object["volume"]
 				totalwei = totalwei + object["weight"]
 			end
 		end
-		outputDebugString("Vol: "..totalvol)
-		outputDebugString("Wei: "..totalwei)
 		if(character.inventoryVolume < totalvol + volume or character.inventoryWeight < totalwei + weight) then
 			outputDebugString("Невозможно добавить предмет данному игроку. Вес или объём исчерпан!")
 		else
+			local id = 1
 			exports.lw_db:addObjects(volume, weight, name, character.id)
-			table.insert(allObjects, { id = allObjects[table.maxn(allObjects)]["id"]+1, volume = volume, weight = weight, name = name, charId = character.id})
+			if(allObjects[table.maxn(allObjects)] ~= nil) then
+				id = allObjects[table.maxn(allObjects)]["id"]+1
+			end
+			outputDebugString("C: "..id)
+			table.insert(allObjects, id, { volume = volume, weight = weight, name = name, charId = character.id, id = id})
+			print_r(allObjects)
 		end
+
 	end
 end
 addCommandHandler ("addObj", addObject)
+
+function test()
+	print_r(allObjects)
+end
+addCommandHandler("test", test)
 
 function delObject (playerSource, commandName, id)
     id = tonumber(id)
@@ -49,5 +59,43 @@ addCommandHandler ("delObj", delObject)
 
 function resourceStart ()
 	allObjects = exports.lw_db:getObjects()
+	if(allObjects == "Ошибка получения игровых объектов") then 
+		allObjects = {}
+	end
+	print_r(allObjects)
 end
 addEventHandler ("onResourceStart", getRootElement(), resourceStart)
+
+function print_r ( t )  
+    local print_r_cache={}
+    local function sub_print_r(t,indent)
+        if (print_r_cache[tostring(t)]) then
+            outputDebugString(indent.."*"..tostring(t))
+        else
+            print_r_cache[tostring(t)]=true
+            if (type(t)=="table") then
+                for pos,val in pairs(t) do
+                    if (type(val)=="table") then
+                        outputDebugString(indent.."["..pos.."] => "..tostring(t).." {")
+                        sub_print_r(val,indent..string.rep(" ",string.len(pos)+8))
+                        outputDebugString(indent..string.rep(" ",string.len(pos)+6).."}")
+                    elseif (type(val)=="string") then
+                        outputDebugString(indent.."["..pos..'] => "'..val..'"')
+                    else
+                        outputDebugString(indent.."["..pos.."] => "..tostring(val))
+                    end
+                end
+            else
+                outputDebugString(indent..tostring(t))
+            end
+        end
+    end
+    if (type(t)=="table") then
+        outputDebugString(tostring(t).." {")
+        sub_print_r(t,"  ")
+        outputDebugString("}")
+    else
+        sub_print_r(t,"  ")
+    end
+    print()
+end
