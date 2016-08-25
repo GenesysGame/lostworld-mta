@@ -12,8 +12,14 @@ function addObject (playerSource, commandName, volume, weight, name, charId)
 	weight = tonumber(weight)
 	name = tostring(name)
 	if(charId) then
+		local id = 1
 		exports.lw_db:addObjects(volume, weight, name, charId)
+		if(allObjects[table.maxn(allObjects)] ~= nil) then
+			id = allObjects[table.maxn(allObjects)]["id"]+1
+		end
+		outputDebugString("C: "..id)
 		table.insert(allObjects, { id = allObjects[table.maxn(allObjects)]["id"]+1, volume = volume, weight = weight, name = name, charId = charId})
+		print_r(allObjects)
 	else
 		local character = playerSource:getData("charModel")
 		local totalvol = 0
@@ -33,11 +39,11 @@ function addObject (playerSource, commandName, volume, weight, name, charId)
 				id = allObjects[table.maxn(allObjects)]["id"]+1
 			end
 			outputDebugString("C: "..id)
-			table.insert(allObjects, id, { volume = volume, weight = weight, name = name, charId = character.id, id = id})
+			table.insert(allObjects, { volume = volume, weight = weight, name = name, charId = character.id, id = id})
 			print_r(allObjects)
 		end
-
 	end
+	triggerClientEvent (playerSource, "onUpdate", playerSource, allObjects)
 end
 addCommandHandler ("addObj", addObject)
 
@@ -54,6 +60,7 @@ function delObject (playerSource, commandName, id)
 			table.remove(allObjects, i)
 		end
 	end
+	triggerClientEvent (playerSource, "onUpdate", playerSource, allObjects)
 end
 addCommandHandler ("delObj", delObject)
 
