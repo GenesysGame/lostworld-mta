@@ -1,0 +1,6 @@
+<meta>
+     <info author="ggame" type="script" name="lw_otherside" description="When a character wasted, he moved to other side - deathmatch world." />
+     <oop>true</oop>
+     
+     <script src="otherside.lua" />
+</meta>

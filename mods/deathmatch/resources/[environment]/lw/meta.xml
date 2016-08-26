@@ -8,4 +8,5 @@
      <include resource="lw_db" />
      <include resource="lw_accounts" />
      <include resource="lw_characters" />
+     <include resource="lw_otherside" />
 </meta>

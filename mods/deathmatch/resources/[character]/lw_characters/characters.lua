@@ -9,6 +9,8 @@ local playerStartTimes = {} -- gametime value for every player when character lo
 local startGametimes = {} -- start tick count values for every player
 
 -- dimensions
+local normalDimension = 0
+local othersideDimension = 1
 local unloggedDimension = 65535
 
 function updateCharacterAge( pSource )
@@ -59,13 +61,15 @@ addEventHandler("onCharacterLoaded", getRootElement(), characterLoaded)
 function characterUnloaded( quitType )
 	updateCharacterGametime(source)
 	local charModel = source:getData("charModel")
-	local pos = source.position
-	charModel.startPosX = pos.x
-	charModel.startPosY = pos.y
-	charModel.startPosZ = pos.z
-	charModel.startPosRotation = source.rotation.z
-	charModel.startPosInterior = source.interior
-	charModel.startPosDimension = source.dimension
+	if source.dimension == normalDimension then
+		local pos = source.position
+		charModel.startPosX = pos.x
+		charModel.startPosY = pos.y
+		charModel.startPosZ = pos.z
+		charModel.startPosRotation = source.rotation.z
+		charModel.startPosInterior = source.interior
+		charModel.startPosDimension = source.dimension
+	end
 	source.dimension = unloggedDimension
 	source.vehicle = nil
 	source.frozen = true
@@ -76,12 +80,20 @@ function characterUnloaded( quitType )
 		startGametimes[charModel.id] = nil
 		exports.lw_db:updateCharacter(charModel)
 	end
+	triggerEvent("otherside:logout", source)
 	source:setData("charModel", nil)
 end
 addEventHandler("onCharacterUnloaded", getRootElement(), characterUnloaded)
 
-function playerWasted( )
-	Timer(spawn, 3000, 1, source)
+function playerWasted( ammo, attacker, weapon, bodypart, stealth )
+	if source.dimension == normalDimension then
+		triggerEvent("otherside:login", source, ammo, attacker, weapon, bodypart, stealth)
+	else
+		Timer(function ( source )
+			triggerEvent("otherside:logout", source)
+			spawn(source)
+		end, 5000, 1, source)
+	end
 end
 addEventHandler("onPlayerWasted", getRootElement(), playerWasted)
 
