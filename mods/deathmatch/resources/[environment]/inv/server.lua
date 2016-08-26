@@ -76,10 +76,16 @@ function delObject (playerSource, commandName, id)
     exports.lw_db:delObjects(id)
 	for i, object in ipairs(allObjects) do
 		if(object["id"]) == id then
-			table.remove(allObjects, i)
+			local players = getElementsByType ("player")
+			for i,thePlayer in ipairs(players) do
+				local character = thePlayer:getData("charModel")
+				if(character.id == object["charId"]) then
+					table.remove(allObjects, i)
+					triggerClientEvent (thePlayer, "onUpdate", thePlayer, allObjects)
+				end
+			end
 		end
 	end
-	triggerClientEvent (playerSource, "onUpdate", playerSource, allObjects)
 end
 addCommandHandler ("delObj", delObject)
 
