@@ -36,6 +36,7 @@ function addObject (playerSource, commandName, volume, weight, name, charId)
 					table.insert(allObjects, { volume = volume, weight = weight, name = name, charId = character.id, id = id})
 					print_r(allObjects)
 				end
+				triggerClientEvent (thePlayer, "onUpdate", thePlayer, allObjects)
 			end
 		end
 	else
@@ -60,8 +61,8 @@ function addObject (playerSource, commandName, volume, weight, name, charId)
 			table.insert(allObjects, { volume = volume, weight = weight, name = name, charId = character.id, id = id})
 			print_r(allObjects)
 		end
+		triggerClientEvent (playerSource, "onUpdate", playerSource, allObjects)
 	end
-	triggerClientEvent (playerSource, "onUpdate", playerSource, allObjects)
 end
 addCommandHandler ("addObj", addObject)
 
