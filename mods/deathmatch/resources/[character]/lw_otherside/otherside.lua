@@ -19,6 +19,7 @@ addEventHandler("otherside:login", getRootElement(), function ( ammo, attacker, 
 	end
 	local ped = createPed(source.model, deadPosition.x, deadPosition.y, deadPosition.z, deadRotation.z)
 	ped.alpha = 0
+	ped.gravity = source.gravity
 	ped.dimension = normalDimension
 	ped:kill(attacker, weapon, bodypart, stealth)
 	deadPeds[charModel.id] = ped
