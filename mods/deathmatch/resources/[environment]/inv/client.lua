@@ -16,7 +16,7 @@ function onLoad (allObjects)
 		for i, object in ipairs(allObjects) do
 			if(object["charId"] == character.id) then 
 				local row = guiGridListAddRow ( grib )
-				guiGridListSetItemText ( grib, row, 1, "Название: "..object["name"].." | Вес: "..object["volume"].." | Объём: "..object["weight"].." | ID: "..object["id"], false, false )             
+				guiGridListSetItemText ( grib, row, 1, "Название: "..object["name"].." | Вес: "..object["weight"].." | Объём: "..object["volume"].." | ID: "..object["id"], false, false )             
 			end                             
 		end
 	end
@@ -30,7 +30,7 @@ function onUpdate (allObjects)
 	for i, object in ipairs(allObjects) do
 		if(object["charId"] == character.id) then 
 			local row = guiGridListAddRow ( grib )
-			guiGridListSetItemText ( grib, row, 1, "Название: "..object["name"].." | Вес: "..object["volume"].." | Объём: "..object["weight"].." | ID: "..object["id"], false, false )             
+			guiGridListSetItemText ( grib, row, 1, "Название: "..object["name"].." | Вес: "..object["weight"].." | Объём: "..object["volume"].." | ID: "..object["id"], false, false )             
 		end                             
 	end
 end

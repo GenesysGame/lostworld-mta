@@ -12,14 +12,32 @@ function addObject (playerSource, commandName, volume, weight, name, charId)
 	weight = tonumber(weight)
 	name = tostring(name)
 	if(charId) then
-		local id = 1
-		exports.lw_db:addObjects(volume, weight, name, charId)
-		if(allObjects[table.maxn(allObjects)] ~= nil) then
-			id = allObjects[table.maxn(allObjects)]["id"]+1
+		local players = getElementsByType ("player")
+		for i,thePlayer in ipairs(players) do
+			local character = thePlayer:getData("charModel")
+			if(character.id == charId) then
+				local totalvol = 0
+				local totalwei = 0 
+				for i, object in ipairs(allObjects) do
+					if(object["charId"]) == character.id then
+						totalvol = totalvol + object["volume"]
+						totalwei = totalwei + object["weight"]
+					end
+				end
+				if(character.inventoryVolume < totalvol + volume or character.inventoryWeight < totalwei + weight) then
+					outputDebugString("Невозможно добавить предмет данному игроку. Вес или объём исчерпан!")
+				else
+					local id = 1
+					exports.lw_db:addObjects(volume, weight, name, character.id)
+					if(allObjects[table.maxn(allObjects)] ~= nil) then
+						id = allObjects[table.maxn(allObjects)]["id"]+1
+					end
+					outputDebugString("C: "..id)
+					table.insert(allObjects, { volume = volume, weight = weight, name = name, charId = character.id, id = id})
+					print_r(allObjects)
+				end
+			end
 		end
-		outputDebugString("C: "..id)
-		table.insert(allObjects, { id = allObjects[table.maxn(allObjects)]["id"]+1, volume = volume, weight = weight, name = name, charId = charId})
-		print_r(allObjects)
 	else
 		local character = playerSource:getData("charModel")
 		local totalvol = 0
