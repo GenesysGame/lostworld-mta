@@ -69,7 +69,7 @@ function delObject (playerSource, commandName, id)
 	for i, object in ipairs(allObjects) do
 		if(object["id"]) == id then
 			local players = getElementsByType ("player")
-			for i,thePlayer in ipairs(players) do
+			for _,thePlayer in ipairs(players) do
 				local character = thePlayer:getData("charModel")
 				if(character.id == object["charId"]) then
 					table.remove(allObjects, i)
