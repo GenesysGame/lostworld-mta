@@ -58,13 +58,18 @@ function addObject (playerSource, commandName, volume, weight, name, charId)
 end
 addCommandHandler ("addObj", addObject)
 
+function test()
+	print_r(allObjects)
+end
+addCommandHandler("test", test)
+
 function delObject (playerSource, commandName, id)
     id = tonumber(id)
     exports.lw_db:delObjects(id)
 	for i, object in ipairs(allObjects) do
 		if(object["id"]) == id then
 			local players = getElementsByType ("player")
-			for _,thePlayer in ipairs(players) do
+			for i,thePlayer in ipairs(players) do
 				local character = thePlayer:getData("charModel")
 				if(character.id == object["charId"]) then
 					table.remove(allObjects, i)
@@ -80,10 +85,6 @@ function resourceStart ()
 	allObjects = exports.lw_db:getObjects()
 	if(allObjects == "Ошибка получения игровых объектов") then 
 		allObjects = {}
-	else
-		for i, object in ipairs(allObjects) do
-			table.insert(allObjects, { volume = object["volume"], weight = object["weight"], name = object["name"], charId = object["charId"], id = object["id"]})
-		end
 	end
 	print_r(allObjects)
 end

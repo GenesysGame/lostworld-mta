@@ -167,6 +167,8 @@ function delObjects( id )
 	result = db:query(query):poll(-1)
 end
 
+-- Delete after ...
+
 function eff() 
 	local query = string.format("ALTER TABLE objects AUTO_INCREMENT = 1;")
 	db:query(query):free()
