@@ -155,14 +155,17 @@ function addObjects( volume, weight, name, charId )
 	query = string.format([[insert into objects (volume, weight, name, charId)
 	values ('%d', '%d', '%s' , '%d');]], volume, weight, name, charId)
 	db:query(query):free()
+	query = string.format("select * from objects where id=LAST_INSERT_ID();")
+	local result = db:query(query):poll(-1)
+	for i, object in ipairs(result) do
+		return object["id"]
+	end
 end
 
 function delObjects( id )
 	query = string.format("delete from objects WHERE id = %i;", id)
 	result = db:query(query):poll(-1)
 end
-
--- Delete after ...
 
 function eff() 
 	local query = string.format("ALTER TABLE objects AUTO_INCREMENT = 1;")

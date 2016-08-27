@@ -27,11 +27,7 @@ function addObject (playerSource, commandName, volume, weight, name, charId)
 				if(character.inventoryVolume < totalvol + volume or character.inventoryWeight < totalwei + weight) then
 					outputDebugString("Невозможно добавить предмет данному игроку. Вес или объём исчерпан!")
 				else
-					local id = 1
-					exports.lw_db:addObjects(volume, weight, name, character.id)
-					if(allObjects[table.maxn(allObjects)] ~= nil) then
-						id = allObjects[table.maxn(allObjects)]["id"]+1
-					end
+					id = exports.lw_db:addObjects(volume, weight, name, character.id)
 					outputDebugString("C: "..id)
 					table.insert(allObjects, { volume = volume, weight = weight, name = name, charId = character.id, id = id})
 					print_r(allObjects)
@@ -52,11 +48,7 @@ function addObject (playerSource, commandName, volume, weight, name, charId)
 		if(character.inventoryVolume < totalvol + volume or character.inventoryWeight < totalwei + weight) then
 			outputDebugString("Невозможно добавить предмет данному игроку. Вес или объём исчерпан!")
 		else
-			local id = 1
-			exports.lw_db:addObjects(volume, weight, name, character.id)
-			if(allObjects[table.maxn(allObjects)] ~= nil) then
-				id = allObjects[table.maxn(allObjects)]["id"]+1
-			end
+			id = exports.lw_db:addObjects(volume, weight, name, character.id)
 			outputDebugString("C: "..id)
 			table.insert(allObjects, { volume = volume, weight = weight, name = name, charId = character.id, id = id})
 			print_r(allObjects)
@@ -66,18 +58,13 @@ function addObject (playerSource, commandName, volume, weight, name, charId)
 end
 addCommandHandler ("addObj", addObject)
 
-function test()
-	print_r(allObjects)
-end
-addCommandHandler("test", test)
-
 function delObject (playerSource, commandName, id)
     id = tonumber(id)
     exports.lw_db:delObjects(id)
 	for i, object in ipairs(allObjects) do
 		if(object["id"]) == id then
 			local players = getElementsByType ("player")
-			for i,thePlayer in ipairs(players) do
+			for _,thePlayer in ipairs(players) do
 				local character = thePlayer:getData("charModel")
 				if(character.id == object["charId"]) then
 					table.remove(allObjects, i)
@@ -93,6 +80,10 @@ function resourceStart ()
 	allObjects = exports.lw_db:getObjects()
 	if(allObjects == "Ошибка получения игровых объектов") then 
 		allObjects = {}
+	else
+		for i, object in ipairs(allObjects) do
+			table.insert(allObjects, { volume = object["volume"], weight = object["weight"], name = object["name"], charId = object["charId"], id = object["id"]})
+		end
 	end
 	print_r(allObjects)
 end
