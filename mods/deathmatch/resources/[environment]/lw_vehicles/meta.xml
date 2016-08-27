@@ -1,0 +1,7 @@
+<meta>
+     <info author="ggame" type="script" name="lw_vehicles" description="Vehicles base" />
+     <oop>true</oop>
+     
+     <script src="vehicles.lua" />
+     <script src="vehicles_c.lua" type="client" />
+</meta>
