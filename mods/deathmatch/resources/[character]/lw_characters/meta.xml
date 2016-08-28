@@ -5,5 +5,5 @@
      <script src="characters.lua" />
      <script src="characters_c.lua" type="client" />
 
-    <file src="grass.png" />
+    <file src="textures/wmybmx.png" />
 </meta>

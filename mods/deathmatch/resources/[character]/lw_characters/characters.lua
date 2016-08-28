@@ -54,6 +54,7 @@ function characterLoaded( charModel )
 		updateCharacterGametime(source)
 		spawn(source)
 	end
+	local allPlayers = Element.getAllByType("player")
 	triggerClientEvent(source, "client:onCharacterUpdated", source)
 end
 addEventHandler("onCharacterLoaded", getRootElement(), characterLoaded)

@@ -10,7 +10,7 @@ function keyPressed(button, press)
     if press and button == "i" then
     	local show = not statesWindow.wdw.visible
     	if show then
-    		updateStatesWindow()
+    		updateCharacterStates()
     	end
         statesWindow.wdw.visible = show
     end
@@ -24,22 +24,39 @@ function initWindows( res )
 end
 addEventHandler("onClientResourceStart", getResourceRootElement(getThisResource()),	initWindows)
 
-function updateStatesWindow( )
-	local character = localPlayer:getData("charModel")
-	if not character then
-		statesWindow.wdw.visible = false
+function updateCharacterStates( )
+	local charModel = localPlayer:getData("charModel")
+	if not charModel then
+		statesWindow.wdw.visible = false	
 	else
-		statesWindow.lblFirstname.text = character.firstname
-		statesWindow.lblLastname.text = character.lastname
-		statesWindow.lblSex.text = character.sex == 0 and "Male" or "Female"
-		statesWindow.lblRace.text = character.race == 0 and "European" or character.race == 1 and "Black" or "Asian"
-		statesWindow.lblAge.text = tostring(character.age).." years"
-		statesWindow.lblExp.text = tostring(character.experience).." points"
-		statesWindow.lblvol.text = tostring(character.inventoryVolume).." volume"
-		statesWindow.lblwei.text = tostring(character.inventoryWeight).." weight"
+		statesWindow.lblFirstname.text = charModel.firstname
+		statesWindow.lblLastname.text = charModel.lastname
+		statesWindow.lblSex.text = charModel.sex == 0 and "Мужской" or "Женский"
+		statesWindow.lblRace.text = charModel.race == 0 and "Европеец" or charModel.race == 1 and "Негр" or "Азиат"
+		statesWindow.lblAge.text = tostring(charModel.age).." лет"
+		statesWindow.lblExp.text = tostring(charModel.experience).." ед."
+		statesWindow.lblvol.text = tostring(charModel.inventoryVolume).." ед."
+		statesWindow.lblwei.text = tostring(charModel.inventoryWeight).." кг"
+
+		if charModel.skinName ~= nil then
+			local texture = dxCreateTexture("textures/"..charModel.skinName..".png")
+			exports.lw_tools:retexture(source, texture, charModel.skinName)
+		end
 	end
 end
-addEventHandler("client:onCharacterUpdated", localPlayer, updateStatesWindow)
+addEventHandler("client:onCharacterUpdated", localPlayer, updateCharacterStates)
+
+addEventHandler( "onClientElementStreamIn", getRootElement(), function ()
+    if source.type == "player" then
+    	local charModel = source:getData("charModel")
+    	if charModel.skinName then
+			local texture = dxCreateTexture("textures/"..charModel.skinName..".png")
+			exports.lw_tools:retexture(source, texture, charModel.skinName)	
+		end
+    end
+end)
+
+-- TODO: - delete shader when sream out
 
 function createStatesWindow( )
 	local x = 20
