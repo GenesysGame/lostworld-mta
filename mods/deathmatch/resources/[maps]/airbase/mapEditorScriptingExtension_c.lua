@@ -16,10 +16,14 @@ addEvent("setLODsClient", true)
 addEventHandler("setLODsClient", resourceRoot, setLODsClient)
 
 function applyBreakableState()
+	local grassTexture = dxCreateTexture("dust.png") --новая текстура
 	for k, obj in pairs(getElementsByType("object", resourceRoot)) do
 		local breakable = getElementData(obj, "breakable")
 		if breakable then
 			setObjectBreakable(obj, breakable == "true")
+		end
+		if getElementModel(obj) == 10722 then
+			exports.lw_tools:retexture(obj, grassTexture, "ws_rooftarmac1")
 		end
 	end
 end

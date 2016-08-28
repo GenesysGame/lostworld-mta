@@ -1,0 +1,10 @@
+<meta>
+     <info author="ggame" type="script" name="lw_tools" description="Tools functions" />
+     <oop>true</oop>
+     
+     <script src="replacer_c.lua" type="client" />
+
+     <export function="retexture" type="client" />
+
+     <file src="replace.fx" type="client" />
+</meta>
