@@ -15,6 +15,8 @@ addEventHandler("onClientResourceStart",resourceRoot, function()
 
     inventoryView.wdw = window
     inventoryView.grid = grid
+
+    loadCustomObjects()
 end)
 
 function onLoad( allObjects )
@@ -58,3 +60,12 @@ function showInventory(button, press)
     end
 end
 addEventHandler("onClientKey", root, showInventory)
+
+-- custom object models
+
+function loadCustomObjects( )
+	local txd = engineLoadTXD("models/robmask.txd")
+	local dff = engineLoadDFF("models/robmask.dff")
+	engineImportTXD(txd, 2052)
+	engineReplaceModel(dff, 2052)
+end

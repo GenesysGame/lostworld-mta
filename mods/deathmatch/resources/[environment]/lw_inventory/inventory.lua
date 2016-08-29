@@ -56,7 +56,7 @@ function addObject( playerSource, commandName, volume, weight, name, charId )
 			id = exports.lw_db:addObject(volume, weight, name, character.id)
 			table.insert(allObjects, { volume = volume, weight = weight, name = name, charId = character.id, id = id})
 		end
-		triggerClientEvent (playerSource, "inventory:onUpdate", playerSource, allObjects)
+		triggerClientEvent(playerSource, "inventory:onUpdate", playerSource, allObjects)
 	end
 end
 addCommandHandler("addObj", addObject)
@@ -87,3 +87,45 @@ function resourceStart( )
 	end
 end
 addEventHandler("onResourceStart", getRootElement(), resourceStart)
+
+-- Temp: add robber mask command
+
+function playerHasMask( pSource )
+	local tempName = "Mask"
+	local charModel = pSource:getData("charModel")
+	if not charModel then return false end
+	for i, object in ipairs(allObjects) do
+		if charModel.id == object.charId then
+			if object.name == tempName then
+				return true
+			end
+		end
+	end
+	return false
+end
+
+function addMask( pSource )
+	local tempName = "Mask"
+	local hasMask = false
+	local charModel = pSource:getData("charModel")
+	if not charModel then return end
+	if playerHasMask(pSource) then return end
+
+	addObject(pSource, "", 1, 0.5, tempName, charModel.id)
+end
+addCommandHandler("addMask", addMask)
+
+function wearMask( pSource )
+	local charModel = pSource:getData("charModel")
+	if not charModel then return end
+	if charModel.mask then --temp solution
+		exports.bone_attach:detachElementFromBone(charModel.mask)
+		charModel.mask:destroy()
+		charModel.mask = nil
+	else
+		charModel.mask = Object(2052, 0, 0, 0)
+		exports.bone_attach:attachElementToBone(charModel.mask, pSource, 1, 0, 0, -0.6, 0, 0, 90)
+	end
+	pSource:setData("charModel", charModel)
+end
+addCommandHandler("wearMask", wearMask)
