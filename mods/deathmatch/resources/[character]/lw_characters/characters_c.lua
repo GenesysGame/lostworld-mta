@@ -7,7 +7,7 @@ addEvent("client:onCharacterUpdated", true)
 
 function keyPressed(button, press)
 	if not localPlayer:getData("charModel") then return end
-    if press and button == "i" then
+    if press and button == "p" then
     	local show = not statesWindow.wdw.visible
     	if show then
     		updateCharacterStates()

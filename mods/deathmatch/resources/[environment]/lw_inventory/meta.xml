@@ -1,0 +1,10 @@
+<meta>
+     <info author="3ff" type="script" name="lw_inventory" description="Resource for objects\characters interaction"/>
+     <oop>true</oop>
+     <script src="inventory_c.lua" type="client"/>
+     <script src="inventory.lua" type="server"/>
+
+     <!-- Custom objects -->
+     <file src="models/robmask.dff" />
+     <file src="models/robmask.txd" />
+</meta>

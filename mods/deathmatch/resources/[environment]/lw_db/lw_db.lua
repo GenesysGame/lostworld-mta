@@ -151,7 +151,7 @@ function getObjects( )
 	end
 end
 
-function addObjects( volume, weight, name, charId )
+function addObject( volume, weight, name, charId )
 	query = string.format([[insert into objects (volume, weight, name, charId)
 	values ('%d', '%d', '%s' , '%d');]], volume, weight, name, charId)
 	db:query(query):free()
@@ -162,7 +162,7 @@ function addObjects( volume, weight, name, charId )
 	end
 end
 
-function delObjects( id )
+function delObject( id )
 	query = string.format("delete from objects WHERE id = %i;", id)
 	result = db:query(query):poll(-1)
 end
@@ -172,6 +172,5 @@ end
 function eff() 
 	local query = string.format("ALTER TABLE objects AUTO_INCREMENT = 1;")
 	db:query(query):free()
-	outputDebugString("allgood")
 end
 addCommandHandler("eff",eff)

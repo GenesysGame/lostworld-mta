@@ -84,6 +84,7 @@ function characterUnloaded( quitType )
 	triggerEvent("otherside:logout", source)
 	source:setData("charModel", nil)
 	triggerClientEvent(source, "client:onCharacterUpdated", source)
+	triggerClientEvent(source, "inventory:onLoad", source, {})
 end
 addEventHandler("onCharacterUnloaded", getRootElement(), characterUnloaded)
 

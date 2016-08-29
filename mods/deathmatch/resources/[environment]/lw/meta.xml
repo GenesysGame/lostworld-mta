@@ -10,4 +10,5 @@
      <include resource="lw_characters" />
      <include resource="lw_otherside" />
      <include resource="lw_vehicles" />
+     <include resource="lw_inventory" />
 </meta>

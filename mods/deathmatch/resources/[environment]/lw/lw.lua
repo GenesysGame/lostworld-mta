@@ -18,22 +18,10 @@ function playerSpawn()
 end
 addEventHandler("onPlayerSpawn", getRootElement(), playerSpawn)
 
-local objects = nil
 local minuteDuration = 60000
 
 function startSetting( res )
 	if res.name == "lw" then
-		--objects loading
-		objects = exports.lw_db:getObjects()
-		for i, object in ipairs(objects) do
-			outputDebugString("OBJECT: "..i)
-			local string = ""
-			for key, field in pairs(object) do
-				string = string.."| "..key..": "..tostring(field).." "
-			end
-			outputDebugString(string)
-		end
-
 		-- Time setting
 		setMinuteDuration(minuteDuration)		
 		local realtime = getRealTime()

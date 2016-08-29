@@ -6,4 +6,6 @@
      <script src="characters_c.lua" type="client" />
 
     <file src="textures/wmybmx.png" />
+
+    <include resource="lw_tools" />
 </meta>

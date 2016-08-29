@@ -7,4 +7,6 @@
     <script src="mapEditorScriptingExtension_c.lua" type="client" validate="false"></script>
 
     <file src="dust.png" />
+
+    <include resource="lw_tools" />
 </meta>
