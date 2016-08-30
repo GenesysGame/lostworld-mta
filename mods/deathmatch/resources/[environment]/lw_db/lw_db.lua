@@ -151,15 +151,20 @@ function getObjects( )
 	end
 end
 
-function addObject( volume, weight, name, charId )
-	query = string.format([[insert into objects (volume, weight, name, charId)
-	values ('%d', '%d', '%s' , '%d');]], volume, weight, name, charId)
+function addObject( volume, weight, name, charId, isUsable, isActivated, modelId )
+	query = string.format([[insert into objects (volume, weight, name, charId, isUsable, isActivated, modelId)
+	values ('%d', '%d', '%s' , '%d', '%d', '%d', '%d');]], volume, weight, name, charId, isUsable, isActivated, modelId)
 	db:query(query):free()
 	query = string.format("select * from objects where id=LAST_INSERT_ID();")
 	local result = db:query(query):poll(-1)
 	for i, object in ipairs(result) do
 		return object["id"]
 	end
+end
+
+function updateObject( id, keyName, value )
+	query = string.format("update objects set "..keyName.." = %d where id = %d;", value, id)
+	db:query(query):free()
 end
 
 function delObject( id )
