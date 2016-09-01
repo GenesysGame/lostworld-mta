@@ -16,6 +16,14 @@ addEventHandler("onClientResourceStart",resourceRoot, function()
     inventoryView.wdw = window
     inventoryView.grid = grid
 
+    --TODO: - delete when merged from dev-3ff5u5
+    local charModel = localPlayer:getData("charModel")
+    if charModel then
+    	charModel.mask = nil
+    	charModel.bag = nil
+    end
+    localPlayer:setData("charModel", charModel)
+
     loadCustomObjects()
 end)
 
@@ -68,4 +76,8 @@ function loadCustomObjects( )
 	local dff = engineLoadDFF("models/robmask.dff")
 	engineImportTXD(txd, 2052)
 	engineReplaceModel(dff, 2052)
+	local bagTXD = engineLoadTXD("models/sportbag.txd")
+	local bagDFF = engineLoadDFF("models/sportbag.dff")
+	engineImportTXD(bagTXD, 2843)
+	engineReplaceModel(bagDFF, 2843)
 end

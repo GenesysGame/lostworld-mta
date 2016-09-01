@@ -7,6 +7,8 @@
      <!-- Custom objects -->
      <file src="models/robmask.dff" />
      <file src="models/robmask.txd" />
+     <file src="models/sportbag.dff" />
+     <file src="models/sportbag.txd" />
 
      <include resource="bone_attach" />
 </meta>

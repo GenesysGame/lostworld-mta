@@ -90,13 +90,12 @@ addEventHandler("onResourceStart", getRootElement(), resourceStart)
 
 -- Temp: add robber mask command
 
-function playerHasMask( pSource )
-	local tempName = "Mask"
+function playerHasObject( pSource, objectName )
 	local charModel = pSource:getData("charModel")
 	if not charModel then return false end
 	for i, object in ipairs(allObjects) do
 		if charModel.id == object.charId then
-			if object.name == tempName then
+			if object.name == objectName then
 				return true
 			end
 		end
@@ -109,11 +108,22 @@ function addMask( pSource )
 	local hasMask = false
 	local charModel = pSource:getData("charModel")
 	if not charModel then return end
-	if playerHasMask(pSource) then return end
+	if playerHasObject(pSource, tempName) then return end
 
 	addObject(pSource, "", 1, 0.5, tempName, charModel.id)
 end
 addCommandHandler("addMask", addMask)
+
+function addBag( pSource )
+	local tempName = "Sport Bag"
+	local hasBag = false
+	local charModel = pSource:getData("charModel")
+	if not charModel then return end
+	if playerHasObject(pSource, tempName) then return end
+
+	addObject(pSource, "", 2, 1, tempName, charModel.id)
+end
+addCommandHandler("addBag", addBag)
 
 function wearMask( pSource )
 	local charModel = pSource:getData("charModel")
@@ -129,3 +139,18 @@ function wearMask( pSource )
 	pSource:setData("charModel", charModel)
 end
 addCommandHandler("wearMask", wearMask)
+
+function wearBag( pSource )
+	local charModel = pSource:getData("charModel")
+	if not charModel then return end
+	if charModel.bag then --temp solution
+		exports.bone_attach:detachElementFromBone(charModel.bag)
+		charModel.bag:destroy()
+		charModel.bag = nil
+	else
+		charModel.bag = Object(2843, 0, 0, 0)
+		exports.bone_attach:attachElementToBone(charModel.bag, pSource, 3, 0, 0, -0.23, 0, 0, 90)
+	end
+	pSource:setData("charModel", charModel)
+end
+addCommandHandler("wearBag", wearBag)
