@@ -10,22 +10,39 @@ local inventoryView = {}
 addEventHandler("onClientResourceStart",resourceRoot, function()
 	local window = guiCreateWindow(scrW - 380, scrH - 450, 360, 400, "Инвентарь 0.01", false)
     guiWindowSetSizable(window, false)
-    local grid = guiCreateGridList(10, 30, 340, 330, false, window)
+    local grid = guiCreateGridList(10, 30, 340, 305, false, window)
     guiGridListAddColumn(grid, "Ваши предметы", 0.9)
-	local use = guiCreateButton( 10, 370, 100, 25, "Использовать", false, window)
-	local delete = guiCreateButton( 250, 370, 100, 25, "Выбросить", false, window)
+	local use = guiCreateButton( 10, 345, 100, 50, "Использовать", false, window)
+	local delete = guiCreateButton( 250, 345, 100, 50, "Выбросить", false, window)
     guiSetVisible(window,false)
 	  
+	local acceptWindow = guiCreateWindow(scrW - 800, scrH - 800, 200, 75, "Согласие", false)
+    guiWindowSetSizable(acceptWindow, false)
+	local accept = guiCreateButton( 10, 30, 75, 25, "Принять", false, acceptWindow)
+	local cancel = guiCreateButton( 110, 30, 75, 25, "Отменить", false, acceptWindow)
+    guiSetVisible(acceptWindow,false)
+	
     inventoryView.wdw = window
     inventoryView.grid = grid
 	inventoryView.use = use
 	inventoryView.delete = delete
 
+	inventoryView.aWdw = acceptWindow
+	inventoryView.aAccept = accept
+	inventoryView.aCancel = cancel
+	
+	guiSetEnabled(inventoryView.use, false)
+	guiSetEnabled(inventoryView.delete, false)
     loadCustomObjects()
 	
-	addEventHandler ( "onClientGUIClick", inventoryView.use, useItem)
-	addEventHandler ( "onClientGUIClick", inventoryView.delete, deleteItem)
-	addEventHandler ( "onClientGUIClick", inventoryView.grid, checkIsActivated )
+	addEventHandler ( "onClientGUIClick", source, function ()
+		if source == inventoryView.use then useItem()
+		elseif source == inventoryView.delete then guiSetVisible(inventoryView.aWdw, true)
+		elseif source == inventoryView.grid then checkIsActivated()
+		elseif source == inventoryView.aAccept then acceptDelete()
+		elseif source == inventoryView.aCancel then guiSetVisible(inventoryView.aWdw, false)
+		end
+	end)
 end)
 
 function onLoad( allObjects )
@@ -96,6 +113,7 @@ function setTextIsActivated(isActivated, isUsable)
 	else
 		guiSetText(inventoryView.use,"Использовать")
 	end
+	guiSetEnabled(inventoryView.delete, true)
 end
 addEventHandler("inventory:setTextIsActivated", localPlayer, setTextIsActivated)
 
@@ -119,22 +137,32 @@ end
 
 function checkIsActivated()
 	local objectId = guiGridListGetItemText ( inventoryView.grid, guiGridListGetSelectedItem ( inventoryView.grid ), 1 )
-	objectId = string.sub (objectId, string.find(objectId,"ID: ")+3 )
-	objectId = tonumber(objectId)
-	triggerServerEvent ( "object:checkIsActivated", resourceRoot, localPlayer, objectId)
+	if isEmpty(objectId) then
+		guiSetEnabled(inventoryView.use, false)
+		guiSetEnabled(inventoryView.delete, false)
+	else
+		objectId = string.sub (objectId, string.find(objectId,"ID: ")+3 )
+		objectId = tonumber(objectId)
+		triggerServerEvent ( "object:checkIsActivated", resourceRoot, localPlayer, objectId)
+	end
 end
 
 
 function useItem()
-	if(guiGetEnabled(inventoryView.use)) then
+	if guiGetEnabled(inventoryView.use) then
 		local objectId = guiGridListGetItemText ( inventoryView.grid, guiGridListGetSelectedItem ( inventoryView.grid ), 1 )
 		objectId = string.sub (objectId, string.find(objectId,"ID: ")+3)
 		triggerServerEvent ( "object:use", resourceRoot, localPlayer, objectId)
 	end
 end
 
-function deleteItem()
+function isEmpty(str)
+  return str == nil or str == ''
+end
+
+function acceptDelete()
 	local objectId = guiGridListGetItemText ( inventoryView.grid, guiGridListGetSelectedItem ( inventoryView.grid ), 1 )
 	objectId = string.sub (objectId, string.find(objectId,"ID: ")+3)
+	guiSetVisible(inventoryView.aWdw, false)
 	triggerServerEvent ( "object:delete", resourceRoot, objectId)
 end
