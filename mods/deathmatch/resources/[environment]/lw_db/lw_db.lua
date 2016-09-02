@@ -1,9 +1,23 @@
 -- Database server configuration file
 
-local db = dbConnect("mysql", "dbname=lw;host=212.109.220.208", "mta", "Y7YCQef8")
+local db = nil
 
 local loginPattern = '[a-zA-Z0-9_%-]+'
 local namePattern = '[АБВГДЕЁЖЗИЙКЛМНОПРСТУФХЦЧШЩЪЫЬЭЮЯабвгдеёжзийклмнопрстуфхцчшщъыьэюя]+'
+
+-- Start
+
+function dbInit( res )
+	if res.name ~= "lw_db" then return end
+	dbReinit()
+	Timer(dbReinit, 60000 * 60 * 12, 0)
+end
+addEventHandler("onResourceStart", getRootElement(), dbInit)
+
+function dbReinit( )
+	outputDebugString("Database reinitialized")
+	db = dbConnect("mysql", "dbname=lw;host=212.109.220.208", "mta", "Y7YCQef8")
+end
 
 -- Accounts, Characters
 

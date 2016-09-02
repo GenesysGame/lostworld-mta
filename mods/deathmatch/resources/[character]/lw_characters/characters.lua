@@ -36,7 +36,6 @@ function updateCharacterGametime( pSource )
 	else
 		local playedTime = (getTickCount() - startGametimes[charModel.id]) / 60000 --played minutes
 		charModel.gametime = playerStartTimes[charModel.id] + playedTime
-		outputDebugString("New game time for "..charModel.firstname.." "..charModel.lastname..": "..charModel.gametime.." minutes.")
 	end
 	pSource:setData("charModel", charModel)
 	updateCharacterAge(pSource)
@@ -74,12 +73,24 @@ function characterUnloaded( quitType )
 	source.dimension = unloggedDimension
 	source.vehicle = nil
 	source.frozen = true
-	if charModel ~= nil then
+	if charModel then
 		gametimeTimers[charModel.id]:destroy()
 		gametimeTimers[charModel.id] = nil
 		playerStartTimes[charModel.id] = nil
 		startGametimes[charModel.id] = nil
 		exports.lw_db:updateCharacter(charModel)
+		--- DELETE THEN ----
+		if charModel.bag then
+			exports.bone_attach:detachElementFromBone(charModel.bag)
+			charModel.bag:destroy()
+			charModel.bag = nil
+		end
+		if charModel.mask then
+			exports.bone_attach:detachElementFromBone(charModel.mask)
+			charModel.mask:destroy()
+			charModel.mask = nil
+		end
+		---------------------
 	end
 	triggerEvent("otherside:logout", source)
 	source:setData("charModel", nil)
