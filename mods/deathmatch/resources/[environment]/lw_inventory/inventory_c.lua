@@ -129,6 +129,7 @@ function pressedKeyHandler( button, press )
 	end
 	if(inventoryView.aWdw.visible == true) then
 		if press and button == "enter" then
+			guiSetEnabled(inventoryView.wdw, true)
 			acceptDelete()
 		elseif press and button == "backspace" then
 			guiSetEnabled(inventoryView.wdw, true)
