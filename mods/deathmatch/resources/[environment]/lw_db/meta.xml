@@ -11,4 +11,5 @@
      <export function="updateCharacter" type ="server" />
      <export function="addObject" type="server" />
      <export function="delObject" type="server" />
+     <export function="updateObject" type="server" />
 </meta>

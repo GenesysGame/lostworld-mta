@@ -54,6 +54,7 @@ function characterLoaded( charModel )
 		spawn(source)
 	end
 	local allPlayers = Element.getAllByType("player")
+	exports.lw_inventory:initInventory(source)
 	triggerClientEvent(source, "client:onCharacterUpdated", source)
 end
 addEventHandler("onCharacterLoaded", getRootElement(), characterLoaded)
@@ -79,18 +80,6 @@ function characterUnloaded( quitType )
 		playerStartTimes[charModel.id] = nil
 		startGametimes[charModel.id] = nil
 		exports.lw_db:updateCharacter(charModel)
-		--- DELETE THEN ----
-		if charModel.bag then
-			exports.bone_attach:detachElementFromBone(charModel.bag)
-			charModel.bag:destroy()
-			charModel.bag = nil
-		end
-		if charModel.mask then
-			exports.bone_attach:detachElementFromBone(charModel.mask)
-			charModel.mask:destroy()
-			charModel.mask = nil
-		end
-		---------------------
 	end
 	triggerEvent("otherside:logout", source)
 	source:setData("charModel", nil)

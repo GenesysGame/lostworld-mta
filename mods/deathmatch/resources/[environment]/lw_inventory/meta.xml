@@ -10,5 +10,7 @@
      <file src="models/sportbag.dff" />
      <file src="models/sportbag.txd" />
 
+	 <export function="initInventory" type="server" />
+	 
      <include resource="bone_attach" />
 </meta>
