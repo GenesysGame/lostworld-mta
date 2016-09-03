@@ -112,7 +112,9 @@ function pressedKeyHandler( button, press )
 		if press and button == "e" then
 			useItem()
 		elseif press and button == "delete" then
+			guiSetEnabled(inventoryView.wdw, false)
 			guiSetVisible(inventoryView.aWdw, true)
+			guiBringToFront(inventoryView.aWdw)
 		elseif press and button == "w" then
 			if(guiGridListGetSelectedItem(inventoryView.grid) ~= 0) then
 				guiGridListSetSelectedItem(inventoryView.grid, guiGridListGetSelectedItem(inventoryView.grid ) - 1, 1)
@@ -129,6 +131,7 @@ function pressedKeyHandler( button, press )
 		if press and button == "enter" then
 			acceptDelete()
 		elseif press and button == "backspace" then
+			guiSetEnabled(inventoryView.wdw, true)
 			guiSetVisible(inventoryView.aWdw, false)
 		end
 	end
