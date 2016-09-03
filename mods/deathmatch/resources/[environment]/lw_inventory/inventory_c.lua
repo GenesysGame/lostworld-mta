@@ -12,14 +12,14 @@ addEventHandler("onClientResourceStart",resourceRoot, function()
     guiWindowSetSizable(window, false)
     local grid = guiCreateGridList(10, 30, 340, 305, false, window)
     guiGridListAddColumn(grid, "Ваши предметы", 0.9)
-	local use = guiCreateButton( 10, 345, 100, 50, "Использовать", false, window)
-	local delete = guiCreateButton( 250, 345, 100, 50, "Выбросить", false, window)
+	local use = guiCreateButton( 10, 345, 100, 40, "E - Использовать", false, window)
+	local delete = guiCreateButton( 250, 345, 100, 40, "DELETE - Выбросить", false, window)
     guiSetVisible(window,false)
 	  
-	local acceptWindow = guiCreateWindow(scrW - 800, scrH - 800, 200, 75, "Согласие", false)
+	local acceptWindow = guiCreateWindow(scrW - 800, scrH - 800, 200, 75, "Подтверждение", false)
     guiWindowSetSizable(acceptWindow, false)
-	local accept = guiCreateButton( 10, 30, 75, 25, "Принять", false, acceptWindow)
-	local cancel = guiCreateButton( 110, 30, 75, 25, "Отменить", false, acceptWindow)
+	local accept = guiCreateButton( 10, 30, 100, 40, "Enter - Принять", false, acceptWindow)
+	local cancel = guiCreateButton( 110, 30, 100, 40, "Backspace - Отменить", false, acceptWindow)
     guiSetVisible(acceptWindow,false)
 	
     inventoryView.wdw = window
@@ -45,58 +45,38 @@ addEventHandler("onClientResourceStart",resourceRoot, function()
 	end)
 end)
 
-function onLoad( allObjects )
+function onLoad( )
 	local character = localPlayer:getData("charModel")
 	if not character then
 		inventoryView.wdw.visible = false
 		return
 	end
+	local inventoryModel = localPlayer:getData("inventoryModel")
 	inventoryView.wdw.visible = not inventoryView.wdw.visible
 	showCursor(inventoryView.wdw.visible)
 
 	guiGridListClear(inventoryView.grid)
 	if inventoryView.wdw.visible then
-		for i, object in ipairs(allObjects) do
-			if(object["charId"] == character.id) then 
-				local row = guiGridListAddRow(inventoryView.grid)
-				guiGridListSetItemText(inventoryView.grid, row, 1, "Название: "..object["name"].." | Вес: "..object["weight"].." | Объём: "..object["volume"].." | ID: "..object["id"], false, false)             
-			end                             
+		for i, object in ipairs(inventoryModel) do
+			local row = guiGridListAddRow(inventoryView.grid)
+			guiGridListSetItemText(inventoryView.grid, row, 1, "Название: "..object["name"].." | Вес: "..object["weight"].." | Объём: "..object["volume"].." | ID: "..object["id"], false, false)                                        
 		end
 	end
 end
 addEventHandler("inventory:onLoad", localPlayer, onLoad)
 
-function onUpdate( allObjects, objectId )
+function onUpdate()
 	local character = localPlayer:getData("charModel")
+	local inventoryModel = localPlayer:getData("inventoryModel")
 	if not character then return end
 	guiGridListClear(inventoryView.grid)
-	for i, object in ipairs(allObjects) do
-		if(object["charId"] == character.id) then 
-			local row = guiGridListAddRow(inventoryView.grid)
-			guiGridListSetItemText(inventoryView.grid, row, 1, "Название: "..object["name"].." | Вес: "..object["weight"].." | Объём: "..object["volume"].." | ID: "..object["id"], false, false)             
-		end
-		if(object["id"] == objectId) then
-			if(object["isActivated"] == 1) then
-				guiSetText(inventoryView.use,"Убрать")
-			else
-				guiSetText(inventoryView.use,"Использовать")
-			end
-		end
+	for i, object in ipairs(inventoryModel) do 
+		local row = guiGridListAddRow(inventoryView.grid)
+		guiGridListSetItemText(inventoryView.grid, row, 1, "Название: "..object["name"].." | Вес: "..object["weight"].." | Объём: "..object["volume"].." | ID: "..object["id"], false, false)             
+		guiSetText(inventoryView.use,"E - Использовать")
+		guiSetEnabled(inventoryView.use, false)
+		guiSetEnabled(inventoryView.delete, false)
 	end
-end
-addEventHandler("inventory:onUpdate", localPlayer, onUpdate)
-
-function onUpdate( allObjects )
-	local character = localPlayer:getData("charModel")
-	if not character then return end
-	guiGridListClear(inventoryView.grid)
-	for i, object in ipairs(allObjects) do
-		if(object["charId"] == character.id) then 
-			local row = guiGridListAddRow(inventoryView.grid)
-			guiGridListSetItemText(inventoryView.grid, row, 1, "Название: "..object["name"].." | Вес: "..object["weight"].." | Объём: "..object["volume"].." | ID: "..object["id"], false, false)             
-		end
-	end
-	guiSetText(inventoryView.use,"Использовать")
 end
 addEventHandler("inventory:onUpdate", localPlayer, onUpdate)
 
@@ -109,9 +89,9 @@ function setTextIsActivated(isActivated, isUsable)
 		guiSetEnabled(inventoryView.use, false)
 	end
 	if(isActivated == 1) then
-		guiSetText(inventoryView.use,"Убрать")
+		guiSetText(inventoryView.use,"E - Убрать")
 	else
-		guiSetText(inventoryView.use,"Использовать")
+		guiSetText(inventoryView.use,"E - Использовать")
 	end
 	guiSetEnabled(inventoryView.delete, true)
 end
@@ -122,7 +102,21 @@ function showInventory(button, press)
     	local charModel = localPlayer:getData("charModel")
     	if not charModel then return end
     	triggerServerEvent("onShowInventory", resourceRoot, localPlayer)
-    end
+	end
+	if(inventoryView.wdw.visible == true) then
+		if press and button == "e" then
+			useItem()
+		elseif press and button == "delete" then
+			guiSetVisible(inventoryView.aWdw, true)
+		end
+	end
+	if(inventoryView.aWdw.visible == true) then
+		if press and button == "enter" then
+			acceptDelete()
+		elseif press and button == "backspace" then
+			guiSetVisible(inventoryView.aWdw, false)
+		end
+	end
 end
 addEventHandler("onClientKey", root, showInventory)
 
@@ -136,23 +130,20 @@ function loadCustomObjects( )
 end
 
 function checkIsActivated()
-	local objectId = guiGridListGetItemText ( inventoryView.grid, guiGridListGetSelectedItem ( inventoryView.grid ), 1 )
-	if isEmpty(objectId) then
+	local inventoryModel = localPlayer:getData("inventoryModel")
+	if inventoryModel[guiGridListGetSelectedItem ( inventoryView.grid )+1] then
+		triggerServerEvent ( "object:checkIsActivated", resourceRoot, localPlayer, inventoryModel[guiGridListGetSelectedItem ( inventoryView.grid )+1]["id"])
+	else
 		guiSetEnabled(inventoryView.use, false)
 		guiSetEnabled(inventoryView.delete, false)
-	else
-		objectId = string.sub (objectId, string.find(objectId,"ID: ")+3 )
-		objectId = tonumber(objectId)
-		triggerServerEvent ( "object:checkIsActivated", resourceRoot, localPlayer, objectId)
 	end
 end
 
 
 function useItem()
 	if guiGetEnabled(inventoryView.use) then
-		local objectId = guiGridListGetItemText ( inventoryView.grid, guiGridListGetSelectedItem ( inventoryView.grid ), 1 )
-		objectId = string.sub (objectId, string.find(objectId,"ID: ")+3)
-		triggerServerEvent ( "object:use", resourceRoot, localPlayer, objectId)
+		local inventoryModel = localPlayer:getData("inventoryModel")
+		triggerServerEvent ( "object:use", resourceRoot, localPlayer, inventoryModel[guiGridListGetSelectedItem ( inventoryView.grid )+1])
 	end
 end
 
@@ -161,8 +152,7 @@ function isEmpty(str)
 end
 
 function acceptDelete()
-	local objectId = guiGridListGetItemText ( inventoryView.grid, guiGridListGetSelectedItem ( inventoryView.grid ), 1 )
-	objectId = string.sub (objectId, string.find(objectId,"ID: ")+3)
+	local inventoryModel = localPlayer:getData("inventoryModel")
 	guiSetVisible(inventoryView.aWdw, false)
-	triggerServerEvent ( "object:delete", resourceRoot, objectId)
+	triggerServerEvent ( "object:delete", resourceRoot, localPlayer, inventoryModel[guiGridListGetSelectedItem ( inventoryView.grid )+1])
 end
