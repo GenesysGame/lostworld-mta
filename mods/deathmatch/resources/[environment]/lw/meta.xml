@@ -11,4 +11,5 @@
      <include resource="lw_otherside" />
      <include resource="lw_vehicles" />
      <include resource="lw_inventory" />
+     <include resource="lw_coptertools" />
 </meta>

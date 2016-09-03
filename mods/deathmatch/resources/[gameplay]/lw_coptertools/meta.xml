@@ -1,0 +1,8 @@
+<meta>
+     <info author="ggame" type="script" name="lw_coptertools" description="Camera for helicopter etc" />
+     <oop>true</oop>
+     
+     <script src="tools.lua" />
+     <script src="tools_c.lua" type="client" />
+    
+</meta>
