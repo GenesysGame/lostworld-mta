@@ -115,6 +115,14 @@ function resourceStart( )
 	if(allObjects == "Ошибка получения игровых объектов") then 
 		allObjects = {}
 	end
+	local charModel = source:getData("charModel")
+	local inventoryModel = {}
+	for i, object in ipairs(allObjects) do
+		if charModel.id == object["charId"] then
+			table.insert(inventoryModel, object)
+		end
+	end
+	source:setData("inventoryModel", inventoryModel)
 end
 addEventHandler("onResourceStart", getRootElement(), resourceStart)
 
