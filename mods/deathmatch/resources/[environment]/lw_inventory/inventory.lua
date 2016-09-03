@@ -91,7 +91,6 @@ function useObjectHandler( source, objectModel )
 		end
 	end
 	source:setData("inventoryModel", inventoryModel)
-	outputDebugString("TEST: used "..objectModel.name.." activated "..objectModel.isActivated)
 	triggerClientEvent(source, "inventory:onUpdate", source, inventoryModel)
 end
 addEventHandler("object:use", resourceRoot, useObjectHandler)
