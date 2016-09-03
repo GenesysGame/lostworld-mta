@@ -18,9 +18,31 @@ end
 addEventHandler("onClientKey", root, keyPressed)
 
 function initWindows( res )
-	if res.name == "lw_characters" then
-		statesWindow = createStatesWindow()
-	end
+	if res.name ~= "lw_characters" then return end
+
+	statesWindow = createStatesWindow()
+
+	-- replace models
+
+	local txd = engineLoadTXD( "models/wmyboun.txd" )
+	local dff = engineLoadDFF( "models/wmyboun.dff" )
+	engineImportTXD( txd, 126 )
+	engineReplaceModel( dff, 126 )-- main antagonist for the demo
+
+	local txd = engineLoadTXD( "models/rob.txd" )
+	local dff = engineLoadDFF( "models/rob.dff" )
+	engineImportTXD( txd, 124 )
+	engineReplaceModel( dff, 124 )-- robber 1 for the demo
+
+	local txd = engineLoadTXD( "models/rob2.txd" )
+	local dff = engineLoadDFF( "models/rob2.dff" )
+	engineImportTXD( txd, 125 )
+	engineReplaceModel( dff, 125 )-- robber 2 for the demo
+
+	local txd = engineLoadTXD( "models/rob3.txd" )
+	local dff = engineLoadDFF( "models/rob3.dff" )
+	engineImportTXD( txd, 127 )
+	engineReplaceModel( dff, 127 )-- robber 3 for the demo
 end
 addEventHandler("onClientResourceStart", getResourceRootElement(getThisResource()),	initWindows)
 
@@ -38,7 +60,7 @@ function updateCharacterStates( )
 		statesWindow.lblvol.text = tostring(charModel.inventoryVolume).." ед."
 		statesWindow.lblwei.text = tostring(charModel.inventoryWeight).." кг"
 
-		if charModel.skinName ~= nil then
+		if charModel.skinName then
 			local texture = dxCreateTexture("textures/"..charModel.skinName..".png")
 			exports.lw_tools:retexture(source, texture, charModel.skinName)
 		end

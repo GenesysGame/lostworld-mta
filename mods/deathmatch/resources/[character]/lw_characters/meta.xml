@@ -7,5 +7,14 @@
 
     <file src="textures/wmybmx.png" />
 
+    <file src="models/wmyboun.dff" />
+    <file src="models/wmyboun.txd" />
+    <file src="models/rob.dff" />
+    <file src="models/rob.txd" />
+    <file src="models/rob2.dff" />
+    <file src="models/rob2.txd" />
+    <file src="models/rob3.dff" />
+    <file src="models/rob3.txd" />
+
     <include resource="lw_tools" />
 </meta>
