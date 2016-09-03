@@ -151,7 +151,8 @@ function getObjects( )
 	end
 end
 
-function addObject( volume, weight, name, charId, isUsable, isActivated, modelId )
+function addObject( volume, weight, name, isUsable, isActivated, modelId, charId)
+	if modelId == 0 then modelId = nil end
 	query = string.format([[insert into objects (volume, weight, name, charId, isUsable, isActivated, modelId)
 	values ('%d', '%d', '%s' , '%d', '%d', '%d', '%d');]], volume, weight, name, charId, isUsable, isActivated, modelId)
 	db:query(query):free()

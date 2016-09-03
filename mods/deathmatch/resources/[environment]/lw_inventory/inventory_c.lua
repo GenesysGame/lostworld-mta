@@ -16,10 +16,11 @@ addEventHandler("onClientResourceStart",resourceRoot, function()
 	local delete = guiCreateButton( 250, 345, 100, 40, "DELETE - Выбросить", false, window)
     guiSetVisible(window,false)
 	  
-	local acceptWindow = guiCreateWindow(scrW - 800, scrH - 800, 200, 75, "Подтверждение", false)
+	local acceptWindow = guiCreateWindow(scrW - 800, scrH - 800, 280, 120, "Подтверждение", false)
     guiWindowSetSizable(acceptWindow, false)
-	local accept = guiCreateButton( 10, 30, 100, 40, "Enter - Принять", false, acceptWindow)
-	local cancel = guiCreateButton( 110, 30, 100, 40, "Backspace - Отменить", false, acceptWindow)
+	local accept = guiCreateButton( 10, 60, 130, 40, "Enter - Принять", false, acceptWindow)
+	local cancel = guiCreateButton( 140, 60, 130, 40, "Backspace - Отменить", false, acceptWindow)
+	local text = guiCreateLabel ( 10, 30, 280, 25, "Вы уверены, что хотите выбросить объект?", false, acceptWindow )
     guiSetVisible(acceptWindow,false)
 	
     inventoryView.wdw = window
@@ -30,6 +31,7 @@ addEventHandler("onClientResourceStart",resourceRoot, function()
 	inventoryView.aWdw = acceptWindow
 	inventoryView.aAccept = accept
 	inventoryView.aCancel = cancel
+	inventoryView.text = text
 	
 	guiSetEnabled(inventoryView.use, false)
 	guiSetEnabled(inventoryView.delete, false)

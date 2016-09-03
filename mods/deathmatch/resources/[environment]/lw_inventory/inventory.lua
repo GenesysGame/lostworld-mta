@@ -15,7 +15,7 @@ function showInventory( localPlayer )
 end
 addEventHandler("onShowInventory", resourceRoot, showInventory)
 
-function addObject( playerSource, commandName, volume, weight, name, charId, isUsable, isActivated, modelId)
+function addObject( playerSource, commandName, volume, weight, name, isUsable, isActivated, modelId, charId)
 	outputDebugString("Use: "..isUsable)
 	outputDebugString("Act: "..isActivated)
 	if (charId) then charId = tonumber(charId) end
@@ -38,8 +38,8 @@ function addObject( playerSource, commandName, volume, weight, name, charId, isU
 				if(character.inventoryVolume < totalvol + volume or character.inventoryWeight < totalwei + weight) then
 					outputChatBox("Невозможно добавить предмет данному игроку. Вес или объём исчерпан!", playerSource)
 				else
-					id = exports.lw_db:addObject(volume, weight, name, character.id, isUsable, isActivated, modelId)
-					table.insert(inventoryModel, { volume = volume, weight = weight, name = name, charId = character.id, id = id, isUsable = isUsable, isActivated = isActivated, modelId = modelId})
+					id = exports.lw_db:addObject(volume, weight, name, isUsable, isActivated, modelId, character.id)
+					table.insert(inventoryModel, { volume = volume, weight = weight, name = name, id = id, isUsable = isUsable, isActivated = isActivated, modelId = modelId, charId = character.id})
 				end
 				thePlayer:setData("inventoryModel", inventoryModel)
 				triggerClientEvent(thePlayer, "inventory:onUpdate", thePlayer)
@@ -60,8 +60,8 @@ function addObject( playerSource, commandName, volume, weight, name, charId, isU
 		if(character.inventoryVolume < totalvol + volume or character.inventoryWeight < totalwei + weight) then
 			outputChatBox("Невозможно добавить предмет данному игроку. Вес или объём исчерпан!", playerSource)
 		else
-			id = exports.lw_db:addObject(volume, weight, name, character.id, isUsable, isActivated, modelId)
-			table.insert(inventoryModel, { volume = volume, weight = weight, name = name, charId = character.id, id = id, isUsable = isUsable, isActivated = isActivated, modelId = modelId})
+			id = exports.lw_db:addObject(volume, weight, name, isUsable, isActivated, modelId, character.id)
+			table.insert(inventoryModel, { volume = volume, weight = weight, name = name, id = id, isUsable = isUsable, isActivated = isActivated, modelId = modelId, charId = character.id})
 		end
 		playerSource:setData("inventoryModel", inventoryModel)
 		triggerClientEvent(playerSource, "inventory:onUpdate", playerSource)
@@ -131,6 +131,7 @@ addEventHandler("onResourceStart", getRootElement(), resourceStart)
 
 function initInventory ( thePlayer)
 	local charModel = thePlayer:getData("charModel")
+	if not charModel then return end
 	local inventoryModel = {}
 	for j, object in ipairs(allObjects) do
 		if charModel.id == object["charId"] then
