@@ -6,6 +6,7 @@ addEvent("onShowInventory", true)
 addEvent("object:delete", true)
 addEvent("object:use", true)
 addEvent("object:checkIsActivated", true)
+addEvent("object:initInventory", true)
 
 function showInventory( localPlayer )
 	local charModel = localPlayer:getData("charModel")
@@ -123,17 +124,22 @@ function resourceStart( )
 		allObjects = {}
 	end
 	for i, thePlayer in ipairs(Element.getAllByType("player")) do
-		local charModel = thePlayer:getData("charModel")
-		local inventoryModel = {}
-		for j, object in ipairs(allObjects) do
-			if charModel.id == object["charId"] then
-				table.insert(inventoryModel, object)
-			end
-		end
-		thePlayer:setData("inventoryModel", inventoryModel)
+		initInventory (thePlayer)
 	end
 end
 addEventHandler("onResourceStart", getRootElement(), resourceStart)
+
+function initInventory ( thePlayer)
+	local charModel = thePlayer:getData("charModel")
+	local inventoryModel = {}
+	for j, object in ipairs(allObjects) do
+		if charModel.id == object["charId"] then
+				table.insert(inventoryModel, object)
+		end
+	end
+	thePlayer:setData("inventoryModel", inventoryModel)
+end
+addEventHandler("object:initInventory", getRootElement(), initInventory)
 
 function playerHasBag( pSource )
 	local tempName = "Bag"

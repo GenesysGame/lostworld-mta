@@ -52,6 +52,7 @@ function onLoad( )
 		return
 	end
 	local inventoryModel = localPlayer:getData("inventoryModel")
+	if not inventoryModel then return false end
 	inventoryView.wdw.visible = not inventoryView.wdw.visible
 	showCursor(inventoryView.wdw.visible)
 
@@ -68,6 +69,7 @@ addEventHandler("inventory:onLoad", localPlayer, onLoad)
 function onUpdate()
 	local character = localPlayer:getData("charModel")
 	local inventoryModel = localPlayer:getData("inventoryModel")
+	if not inventoryModel then return false end
 	if not character then return end
 	guiGridListClear(inventoryView.grid)
 	for i, object in ipairs(inventoryModel) do 
@@ -108,6 +110,16 @@ function showInventory(button, press)
 			useItem()
 		elseif press and button == "delete" then
 			guiSetVisible(inventoryView.aWdw, true)
+		elseif press and button == "w" then
+			if(guiGridListGetSelectedItem ( inventoryView.grid ) ~= 0) then
+				guiGridListSetSelectedItem ( inventoryView.grid, guiGridListGetSelectedItem ( inventoryView.grid )-1, 1)
+				checkIsActivated()
+			end
+		elseif press and button == "s" then
+			if(guiGridListGetSelectedItem ( inventoryView.grid ) ~= guiGridListGetRowCount ( inventoryView.grid )-1) then
+				guiGridListSetSelectedItem ( inventoryView.grid, guiGridListGetSelectedItem ( inventoryView.grid )+1, 1)
+				checkIsActivated()
+			end
 		end
 	end
 	if(inventoryView.aWdw.visible == true) then
@@ -131,6 +143,7 @@ end
 
 function checkIsActivated()
 	local inventoryModel = localPlayer:getData("inventoryModel")
+	if not inventoryModel then return false end
 	if inventoryModel[guiGridListGetSelectedItem ( inventoryView.grid )+1] then
 		triggerServerEvent ( "object:checkIsActivated", resourceRoot, localPlayer, inventoryModel[guiGridListGetSelectedItem ( inventoryView.grid )+1]["id"])
 	else
@@ -143,6 +156,7 @@ end
 function useItem()
 	if guiGetEnabled(inventoryView.use) then
 		local inventoryModel = localPlayer:getData("inventoryModel")
+		if not inventoryModel then return false end
 		triggerServerEvent ( "object:use", resourceRoot, localPlayer, inventoryModel[guiGridListGetSelectedItem ( inventoryView.grid )+1])
 	end
 end
@@ -153,6 +167,7 @@ end
 
 function acceptDelete()
 	local inventoryModel = localPlayer:getData("inventoryModel")
+	if not inventoryModel then return false end
 	guiSetVisible(inventoryView.aWdw, false)
 	triggerServerEvent ( "object:delete", resourceRoot, localPlayer, inventoryModel[guiGridListGetSelectedItem ( inventoryView.grid )+1])
 end
