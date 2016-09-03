@@ -55,7 +55,7 @@ function characterLoaded( charModel )
 		spawn(source)
 	end
 	local allPlayers = Element.getAllByType("player")
-	triggerEvent ( "object:initInventory", source, source )
+	exports.lw_inventory:initInventory(source)
 	triggerClientEvent(source, "client:onCharacterUpdated", source)
 end
 addEventHandler("onCharacterLoaded", getRootElement(), characterLoaded)

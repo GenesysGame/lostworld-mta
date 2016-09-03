@@ -6,12 +6,12 @@ addEvent("onShowInventory", true)
 addEvent("object:delete", true)
 addEvent("object:use", true)
 addEvent("object:checkIsActivated", true)
-addEvent("object:initInventory", true)
 
 function showInventory( localPlayer )
 	local charModel = localPlayer:getData("charModel")
+	local inventoryModel = localPlayer:getData("inventoryModel")
 	if not charModel then return end
-	triggerClientEvent(localPlayer, "inventory:onLoad", localPlayer)
+	triggerClientEvent(localPlayer, "inventory:onLoad", localPlayer, inventoryModel)
 end
 addEventHandler("onShowInventory", resourceRoot, showInventory)
 
@@ -29,20 +29,19 @@ function addObject( playerSource, commandName, volume, weight, name, isUsable, i
 			if(character.id == charId) then
 				local totalvol = 0
 				local totalwei = 0 
-				for i, object in ipairs(allObjects) do
-					if(object["charId"]) == character.id then
-						totalvol = totalvol + object["volume"]
-						totalwei = totalwei + object["weight"]
-					end
+				for i, object in ipairs(inventoryModel) do
+					totalvol = totalvol + object["volume"]
+					totalwei = totalwei + object["weight"]
 				end
 				if(character.inventoryVolume < totalvol + volume or character.inventoryWeight < totalwei + weight) then
 					outputChatBox("Невозможно добавить предмет данному игроку. Вес или объём исчерпан!", playerSource)
 				else
 					id = exports.lw_db:addObject(volume, weight, name, isUsable, isActivated, modelId, character.id)
-					table.insert(inventoryModel, { volume = volume, weight = weight, name = name, id = id, isUsable = isUsable, isActivated = isActivated, modelId = modelId, charId = character.id})
+					outputDebugString("ĪŠ: "..id)
+					table.insert(inventoryModel, { volume = volume, weight = weight, name = name, id = id, isUsable = isUsable, isActivated = isActivated, modelId = modelId, charId = character.id })
 				end
 				thePlayer:setData("inventoryModel", inventoryModel)
-				triggerClientEvent(thePlayer, "inventory:onUpdate", thePlayer)
+				triggerClientEvent(thePlayer, "inventory:onUpdate", thePlayer, thePlayer:getData("inventoryModel"))
 			end
 		end
 	else
@@ -51,20 +50,19 @@ function addObject( playerSource, commandName, volume, weight, name, isUsable, i
 		if not character then return end
 		local totalvol = 0
 		local totalwei = 0 
-		for i, object in ipairs(allObjects) do
-			if(object["charId"]) == character.id then
-				totalvol = totalvol + object["volume"]
-				totalwei = totalwei + object["weight"]
-			end
+		for i, object in ipairs(inventoryModel) do
+			totalvol = totalvol + object["volume"]
+			totalwei = totalwei + object["weight"]
 		end
 		if(character.inventoryVolume < totalvol + volume or character.inventoryWeight < totalwei + weight) then
 			outputChatBox("Невозможно добавить предмет данному игроку. Вес или объём исчерпан!", playerSource)
 		else
 			id = exports.lw_db:addObject(volume, weight, name, isUsable, isActivated, modelId, character.id)
-			table.insert(inventoryModel, { volume = volume, weight = weight, name = name, id = id, isUsable = isUsable, isActivated = isActivated, modelId = modelId, charId = character.id})
+			outputDebugString("ĪŠ: "..id)
+			table.insert(inventoryModel, { volume = volume, weight = weight, name = name, id = id, isUsable = isUsable, isActivated = isActivated, modelId = modelId, charId = character.id })
 		end
 		playerSource:setData("inventoryModel", inventoryModel)
-		triggerClientEvent(playerSource, "inventory:onUpdate", playerSource)
+		triggerClientEvent(playerSource, "inventory:onUpdate", playerSource, playerSource:getData("inventoryModel"))
 	end
 end
 addCommandHandler("addObj", addObject)
@@ -80,8 +78,8 @@ function delObject(source, objectModel )
 				if not character then break end
 				if(character.id == object["charId"]) then
 					table.remove(inventoryModel, i)
-					source:setData("inventoryModel", inventoryModel)
-					triggerClientEvent(thePlayer, "inventory:onUpdate", thePlayer)
+					thePlayer:setData("inventoryModel", inventoryModel)
+					triggerClientEvent(thePlayer, "inventory:onUpdate", thePlayer, thePlayer:getData("inventoryModel"))
 				end
 			end
 		end
@@ -104,7 +102,7 @@ function useObject(source, objectModel)
 		end
 	end
 	source:setData("inventoryModel", inventoryModel)
-	triggerClientEvent(source, "inventory:onUpdate", source)
+	triggerClientEvent(source, "inventory:onUpdate", source, source:getData("inventoryModel"))
 end
 addEventHandler("object:use", resourceRoot, useObject)
 
@@ -119,10 +117,6 @@ end
 addEventHandler("object:checkIsActivated", resourceRoot, checkIsActivated)
 
 function resourceStart( )
-	allObjects = exports.lw_db:getObjects()
-	if(allObjects == "Ошибка получения игровых объектов") then 
-		allObjects = {}
-	end
 	for i, thePlayer in ipairs(Element.getAllByType("player")) do
 		initInventory (thePlayer)
 	end
@@ -130,6 +124,10 @@ end
 addEventHandler("onResourceStart", getRootElement(), resourceStart)
 
 function initInventory ( thePlayer)
+	allObjects = exports.lw_db:getObjects()
+	if(allObjects == "Ошибка получения игровых объектов") then 
+		allObjects = {}
+	end
 	local charModel = thePlayer:getData("charModel")
 	if not charModel then return end
 	local inventoryModel = {}
@@ -138,9 +136,10 @@ function initInventory ( thePlayer)
 				table.insert(inventoryModel, object)
 		end
 	end
+	print_r(inventoryModel)
 	thePlayer:setData("inventoryModel", inventoryModel)
+	outputDebugString("Загружен инвентарь")
 end
-addEventHandler("object:initInventory", getRootElement(), initInventory)
 
 function playerHasBag( pSource )
 	local tempName = "Bag"
@@ -163,7 +162,7 @@ function addBag( pSource )
 	if not charModel then return end
 	if playerHasBag(pSource) then return end
 
-	addObject(pSource, "", 4, 5, tempName, charModel.id, 0, 0, 9999)
+	addObject(pSource, "", 4, 5, tempName, 0, 0, 9999, charModel.id)
 end
 addCommandHandler("addBag", addBag)
 
@@ -190,7 +189,7 @@ function addMask( pSource )
 	if not charModel then return end
 	if playerHasMask(pSource) then return end
 
-	addObject(pSource, "", 2, 1, tempName, charModel.id, 1, 0, 2052)
+	addObject(pSource, "", 2, 1, tempName, 1, 0, 2052, charModel.id)
 end
 addCommandHandler("addMask", addMask)
 

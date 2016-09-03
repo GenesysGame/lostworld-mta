@@ -8,5 +8,7 @@
      <file src="models/robmask.dff" />
      <file src="models/robmask.txd" />
 
+	 <export function="initInventory" type="server" />
+	 
      <include resource="bone_attach" />
 </meta>

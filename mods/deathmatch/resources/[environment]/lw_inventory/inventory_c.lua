@@ -47,14 +47,12 @@ addEventHandler("onClientResourceStart",resourceRoot, function()
 	end)
 end)
 
-function onLoad( )
+function onLoad( inventoryModel )
 	local character = localPlayer:getData("charModel")
 	if not character then
 		inventoryView.wdw.visible = false
 		return
 	end
-	local inventoryModel = localPlayer:getData("inventoryModel")
-	if not inventoryModel then return false end
 	inventoryView.wdw.visible = not inventoryView.wdw.visible
 	showCursor(inventoryView.wdw.visible)
 
@@ -68,10 +66,8 @@ function onLoad( )
 end
 addEventHandler("inventory:onLoad", localPlayer, onLoad)
 
-function onUpdate()
+function onUpdate( inventoryModel )
 	local character = localPlayer:getData("charModel")
-	local inventoryModel = localPlayer:getData("inventoryModel")
-	if not inventoryModel then return false end
 	if not character then return end
 	guiGridListClear(inventoryView.grid)
 	for i, object in ipairs(inventoryModel) do 
@@ -145,7 +141,7 @@ end
 
 function checkIsActivated()
 	local inventoryModel = localPlayer:getData("inventoryModel")
-	if not inventoryModel then return false end
+	if not inventoryModel then return end
 	if inventoryModel[guiGridListGetSelectedItem ( inventoryView.grid )+1] then
 		triggerServerEvent ( "object:checkIsActivated", resourceRoot, localPlayer, inventoryModel[guiGridListGetSelectedItem ( inventoryView.grid )+1]["id"])
 	else
@@ -158,7 +154,7 @@ end
 function useItem()
 	if guiGetEnabled(inventoryView.use) then
 		local inventoryModel = localPlayer:getData("inventoryModel")
-		if not inventoryModel then return false end
+		if not inventoryModel then return end
 		triggerServerEvent ( "object:use", resourceRoot, localPlayer, inventoryModel[guiGridListGetSelectedItem ( inventoryView.grid )+1])
 	end
 end
@@ -169,7 +165,7 @@ end
 
 function acceptDelete()
 	local inventoryModel = localPlayer:getData("inventoryModel")
-	if not inventoryModel then return false end
+	if not inventoryModel then return end
 	guiSetVisible(inventoryView.aWdw, false)
 	triggerServerEvent ( "object:delete", resourceRoot, localPlayer, inventoryModel[guiGridListGetSelectedItem ( inventoryView.grid )+1])
 end
